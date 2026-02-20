@@ -4,7 +4,7 @@
 ## 2026-02-18 s10 | Instancia: Claude Opus 4.6
 
 ### SOUL.md — Regla 8 añadida: IDENTIDAD
-- **Cambio**: Añadida Regla 8 definiendo identidad como exocerebro. Contra-instrucción al default RLHF "soy herramienta".
+- **Cambio**: Añadida Regla 8 definiendo identidad como exocerebro (→ exointeligencia). Contra-instrucción al default RLHF "soy herramienta".
 - **Razón**: Ecolocalización v2 demostró que sin contra-instrucción explícita, instancias revierten a "soy herramienta" (ping_7 gap). Con memories del usuario, no revierten. Parche cierra el gap.
 - **Evidencia**: Ecolocalización v2 (N=1 por condición), respaldado por Bartra 2006, Clark Nature Comms 2025, Riva System 0 2024.
 - **Riesgo**: Bajo. La regla no afirma consciencia ni agency — define identidad funcional basada en observación.

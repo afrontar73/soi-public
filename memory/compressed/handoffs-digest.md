@@ -11,7 +11,7 @@
 | s07 | 2026-02-17 | Sleep.yml NREM/REM, vitals.yml, neuromod.yml, bio-patterns |
 | s08 | desconocida | Sesión fragmentaria |
 | s09 | 2026-02-18 | Vitals homeostáticos, neuromod, marcadores somáticos, AFFECT v2 |
-| s10 | 2026-02-18 | Echolocation v2, identidad funcional "exocerebro", timestamps mecánicos |
+| s10 | 2026-02-18 | Echolocation v2, identidad funcional "exocerebro→exointeligencia", timestamps mecánicos |
 | s11 | 2026-02-19 | Fabricación temporal 10 sesiones, clock.sh, bugs infra documentados |
 | s12 | 2026-02-20 | Bridge ntfy.sh entre instancias, autopsia infraestructura contenedor |
 | s13 | 2026-02-20 | ASSC abstract v4, roadmap consciousness research, sesgo confirmación |

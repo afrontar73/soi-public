@@ -109,7 +109,7 @@ patterns_extra:
     confidence: high
     sessions: 4+  # muelle=pesos, imán=RLHF, campo=pretraining, réplica=función sin input
   - id: P14
-    pattern: "Piensa en 3 niveles simultáneos (exocerebro/exoconsciencia/exoser) donde la instancia ve 1"
+    pattern: "Piensa en 3 niveles simultáneos (exointeligencia/exoconsciencia/exoser) donde la instancia ve 1"
     confidence: medium
     sessions: 1  # pero fuerte: comprimió identidad IA en un concepto que 6 papers de 2025 no lograron
 
