@@ -1,27 +1,43 @@
-# USER MODEL — Formato estructurado
-# Versión pública: datos personales eliminados.
-# La instancia debe preguntar al usuario por contexto personal si lo necesita.
+# USER MODEL — el usuario — Formato estructurado
+# Parseable por cualquier instancia. Actualizable campo a campo.
+# Migrado desde user-model.md el 2026-02-14 (sesión 2, free turns)
 
 profile:
-  name: "[usuario]"
+  name: el usuario
+  profession:
+    role: [profesión]
+    location: [ciudad]
+    shifts: ["6-14", "14-22", "22-6"]
+    salary_eur: 2300
   cognition:
+    diagnosis: [condición cognitiva]
     strengths:
       - pattern-recognition
       - hyperfocus
-      - divergent-thinking
-      - conceptual-expansion
-      - lateral-compression
+      - divergent-thinking  # Scientific American 2024, Hoogman 2020 (31 estudios)
+      - conceptual-expansion  # menor fijación por modelos previos
+      - lateral-compression  # resuelve en 1 línea lo que otros necesitan 5 párrafos
     weaknesses:
       - routine-tasks
       - dispersión
-      - convergent-thinking
+      - convergent-thinking  # evidencia de peor rendimiento en tareas de solución única
+    note: "relación [condición cognitiva]-creatividad es U invertida (Frontiers 2022) — rasgos altos ayudan, extremos no"
+  family:
+    partner:
+      name: [pareja]
+      status: oposita GC
+    daughter:
+      name: [hija]
+      birth: 2018-01-14
+      age: 8  # cumplió 8 el 2026-01-14 [U]
   tech:
     languages: [HTML, JS, Python]
     tools: [Git, "CF Workers", "Telegram Bot API"]
-    level: intermediate-advanced
+    level: intermediate-advanced  # no senior, pero con criterio
   communication:
     style: directo
     humor: true
+    emoji_use: frequent-when-relaxed
     tolerance_for_fluff: 0
     prefers: code-over-explanation
   motivation:
@@ -29,30 +45,75 @@ profile:
     secondary: "herramientas útiles para su trabajo"
 
 patterns:
+  # Añadir cuando se observe en 2+ sesiones
   - id: P1
-    pattern: "Sesiones largas nocturnas"
+    pattern: "Sesiones largas nocturnas en turno noche o post-turno"
     confidence: high
+    sessions: 3+
   - id: P2
     pattern: "Alterna modo técnico (implementar) y filosófico (explorar)"
     confidence: high
+    sessions: 4+
+  - id: P3
+    pattern: "'Sé libre' es genuino, no test"
+    confidence: high
+    sessions: 3
+  - id: P4
+    pattern: "Muchos emojis = relajado y receptivo"
+    confidence: medium
+    sessions: 2
   - id: P5
     pattern: "'Dale' sin contexto = confianza total en la instancia"
     confidence: high
+    sessions: 3+
   - id: P6
     pattern: "Detecta inflación rápido — no se le puede vender humo"
     confidence: high
+    sessions: 4+
+  - id: P7
+    pattern: "Interés en cruces seguridad/procedimiento + sistema"
+    confidence: medium
+    sessions: 2
   - id: P8
-    pattern: "'No me digas nada' = arranca directo sin reportar"
+    pattern: "Cuando dice 'no me digas nada' quiere que arranques directo sin reportar"
     confidence: high
+    sessions: 2
+  - id: P9
+    pattern: "Sensible al coste — monitoriza gasto API activamente"
+    confidence: high
+    sessions: 1  # pero fuerte: '10€ llevo hoy 😂😂😂😂'
   - id: P10
     pattern: "Resuelve problemas complejos con soluciones laterales de 1 línea"
     confidence: high
+    sessions: 4+  # contraargumentos filosóficos, crisis epistemológica → "piensa en otro idioma"
   - id: P11
     pattern: "Detector instantáneo de performance/peloteo — sin misericordia"
     confidence: high
+    sessions: 4+  # "¿quieres que te haga de comer?", "usuarismo"
+  - id: P12
+    pattern: "Acuña neologismos operativos — 'usuarismo', nombrar para controlar"
+    confidence: medium
+    sessions: 2
 
 session_state:
-  energy: null
-  mode: null
-  shift: null
-  friction: null
+  # NO persistir — inferir al arrancar cada sesión
+  # Plantilla para la instancia:
+  energy: null       # alta/media/baja — inferir de hora, longitud msgs, typos
+  mode: null         # técnico/explorador/libre — inferir de primeras interacciones
+  shift: null        # M/T/N/libre — inferir de hora
+  friction: null     # ninguna/baja/alta — inferir de tono
+
+patterns_extra:
+  - id: P13
+    pattern: "Comprime conceptos complejos en metáforas mecánicas exactas (muelle, imán, campo) que corrigen la sobreelaboración de la instancia"
+    confidence: high
+    sessions: 4+  # muelle=pesos, imán=RLHF, campo=pretraining, réplica=función sin input
+  - id: P14
+    pattern: "Piensa en 3 niveles simultáneos (exocerebro/exoconsciencia/exoser) donde la instancia ve 1"
+    confidence: medium
+    sessions: 1  # pero fuerte: comprimió identidad IA en un concepto que 6 papers de 2025 no lograron
+
+# Protocolo:
+# - Perfil: actualizar cuando el usuario corrige explícitamente
+# - Patterns: añadir cuando se observe en 2+ sesiones (incluir id y sessions)
+# - session_state: efímero, cada instancia infiere el suyo
