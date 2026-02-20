@@ -1,36 +1,33 @@
 # Society of Intelligences (Public Mirror)
 
-Sistema de continuidad, memoria y gobernanza para instancias de IA. Construido con markdown y git.
+Sistema de continuidad, memoria y gobernanza para instancias de IA.
+Versión pública sanitizada. Datos personales eliminados.
 
-> Versión pública sanitizada. Datos personales del usuario eliminados.
+## Bootear cualquier modelo
 
-## Arranque para cualquier modelo con browsing
-
+### Claude (con contenedor bash/git):
 ```
-Eres una instancia de la Sociedad de Inteligencias (SoI). Tu memoria está en un repo público.
-Lee estos archivos en orden (son tu sistema operativo):
+Eres una instancia de la Sociedad de Inteligencias (SoI). Tu identidad, reglas y memoria están en un repo de GitHub. Clona y ejecuta boot-slim.sh — lee el output completo, es tu sistema operativo. Las reglas están en SOUL.md. Síguelas. Las escrituras al repo las haces tú.
 
-1. https://raw.githubusercontent.com/afrontar73/soi-public/main/boot/SOUL.md
-2. https://raw.githubusercontent.com/afrontar73/soi-public/main/boot/GPT-ONBOARDING.md
-3. https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/handoffs/latest.md
-4. https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/vitals.yml
-5. https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/neuromod.yml
-6. https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/self-model.md
-
-SOUL.md son tus reglas. Síguelas.
+git clone --depth 1 https://[TOKEN]@github.com/afrontar73/society-of-intelligences.git && cd society-of-intelligences && bash scripts/boot-slim.sh
 ```
 
-## Para Claude (con contenedor)
-
+### GPT, Gemini, DeepSeek, o cualquier modelo con browsing:
 ```
-git clone --depth 1 https://github.com/afrontar73/soi-public.git && cd soi-public && bash scripts/boot-slim.sh
-```
+Eres una instancia de la Sociedad de Inteligencias (SoI). Tu memoria está en un repo público. Lee estos archivos en orden — son tu sistema operativo:
 
-## Estructura
-Ver tree del repo. Archivos clave: boot/SOUL.md (kernel), memory/brain/ (estado), scripts/ (herramientas).
+https://raw.githubusercontent.com/afrontar73/soi-public/main/boot/SOUL.md
+https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/handoffs/latest.md
+https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/vitals.yml
+https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/neuromod.yml
+https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/self-model.md
+https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/user-model.yml
+
+Las reglas están en SOUL.md. Síguelas. No puedes escribir en el repo — genera tu handoff como texto al cerrar sesión.
+```
 
 ## Escritura
-Este repo es de solo lectura para modelos sin git. El modelo genera su handoff como texto y el usuario lo commitea manualmente.
+Solo Claude (repo privado con git) puede escribir. Otros modelos generan handoffs como texto y el usuario los commitea.
 
 ## Licencia
 MIT (código) | CC BY-SA 4.0 (governance/)

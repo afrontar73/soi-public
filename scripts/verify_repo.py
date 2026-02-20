@@ -71,7 +71,6 @@ def check_refs(files_to_scan):
 check_refs([
     REPO_ROOT / "README.md",
     REPO_ROOT / "boot" / "SOUL.md",
-    REPO_ROOT / "boot" / "GPT-ONBOARDING.md",
 ])
 
 # === 2. YAML files parse correctly ===
