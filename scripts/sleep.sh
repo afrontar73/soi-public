@@ -19,8 +19,9 @@ echo ""
 # ═══════════════════════════════════════
 # 1. EPISODES: contar, identificar podables, podar si --execute
 # ═══════════════════════════════════════
-TOTAL=$(grep -c "^- \*\*E-" "$EPISODES" 2>/dev/null || echo 0)
-echo "📊 Episodes: $TOTAL (umbral: 50)"
+TOTAL=$(sed '/^## ARCHIVE/,$d' "$EPISODES" | grep -c "^- \*\*E-" 2>/dev/null || echo 0)
+ARCHIVED=$(sed -n '/^## ARCHIVE/,$p' "$EPISODES" | grep -c "^- \*\*E-" 2>/dev/null || echo 0)
+echo "📊 Episodes: $TOTAL activos, $ARCHIVED archivados (umbral: 50)"
 
 # Aplicar heat decay (-1 global) si --execute
 if [ "$DRY_RUN" = false ]; then
