@@ -51,21 +51,52 @@ if [ "$TOTAL" -gt 50 ]; then
       echo "## ARCHIVE (podados por sleep.sh)" >> "$EPISODES"
     fi
     # Mover líneas con heat:0 o heat negativo
-    grep -P "^- \*\*E-.*heat:\s*[0-]" "$EPISODES" >> "$EPISODES.archive" 2>/dev/null || true
-    if [ -s "$EPISODES.archive" ]; then
-      cat "$EPISODES.archive" >> "$EPISODES"
-      # Eliminar las líneas originales (no las del ARCHIVE)
-      TEMP=$(mktemp)
-      awk '/^## ARCHIVE/{found=1} !found && /heat:\s*[0-]/ && /^- \*\*E-/{next} {print}' "$EPISODES" > "$TEMP"
-      # Re-append archive section
-      echo "" >> "$TEMP"
-      echo "## ARCHIVE (podados por sleep.sh)" >> "$TEMP"
-      cat "$EPISODES.archive" >> "$TEMP"
-      mv "$TEMP" "$EPISODES"
-      MOVED=$(wc -l < "$EPISODES.archive")
-      echo "   ✂️  Movidos $MOVED episodios a ARCHIVE"
-    fi
-    rm -f "$EPISODES.archive"
+    # Mover líneas con heat:0 o heat negativo (solo si no tienen links entrantes)
+    python3 -c "
+import re
+text = open('$EPISODES').read()
+lines = text.splitlines()
+defined = set(re.findall(r'\*\*(E-[A-Z]\d+)\*\*', text))
+# Find all link targets to know which episodes are referenced
+all_links = set()
+for line in lines:
+    m = re.search(r'links:\s*\[([^\]]*)\]', line)
+    if m:
+        all_links.update(t.strip() for t in m.group(1).split(',') if t.strip())
+
+archive = []
+keep = []
+in_archive = False
+for line in lines:
+    if line.startswith('## ARCHIVE'):
+        in_archive = True
+        continue
+    if in_archive:
+        archive.append(line)
+        continue
+    # Check if this is a podable episode
+    m_id = re.search(r'\*\*(E-[A-Z]\d+)\*\*', line)
+    m_heat = re.search(r'heat:\s*(-?\d+)', line)
+    if m_id and m_heat and int(m_heat.group(1)) <= 0:
+        eid = m_id.group(1)
+        if eid in all_links:
+            # Has incoming links, keep it but warn
+            print(f'   ⚠️  {eid} tiene links entrantes, no archivado')
+            keep.append(line)
+        else:
+            archive.append(line)
+            print(f'   ✂️  {eid} archivado (heat {m_heat.group(1)})')
+    else:
+        keep.append(line)
+
+# Rebuild file
+with open('$EPISODES', 'w') as f:
+    f.write('\n'.join(keep))
+    if archive:
+        f.write('\n\n## ARCHIVE (podados por sleep.sh)\n')
+        f.write('\n'.join(archive))
+    f.write('\n')
+"
   fi
 else
   echo "✅ Dentro del umbral"

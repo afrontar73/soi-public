@@ -132,6 +132,30 @@ for f in sorted((REPO_ROOT / "boot").glob("*.md")):
         if 'EVIDENCIA' in line and '[ref:' not in line:
             err(f"{f.relative_to(REPO_ROOT)}:{i} has EVIDENCIA without [ref:] — needs citation or degrade to HIPÓTESIS")
 
+# === 7. Episode cross-link integrity ===
+episodes_file = REPO_ROOT / "memory" / "brain" / "episodes.md"
+if episodes_file.exists():
+    ep_text = episodes_file.read_text(encoding='utf-8')
+    # Extract defined IDs: **E-XXX**
+    defined_ids = re.findall(r'\*\*(E-[A-Z]\d+)\*\*', ep_text)
+    defined_set = set(defined_ids)
+    
+    # Check duplicate IDs
+    seen = set()
+    for eid in defined_ids:
+        if eid in seen:
+            err(f"episodes.md: duplicate ID {eid}")
+        seen.add(eid)
+    
+    # Extract all link targets: links: [E-XX, E-YY]
+    for i, line in enumerate(ep_text.splitlines(), 1):
+        link_match = re.search(r'links:\s*\[([^\]]*)\]', line)
+        if link_match:
+            targets = [t.strip() for t in link_match.group(1).split(',') if t.strip()]
+            for target in targets:
+                if target not in defined_set:
+                    err(f"episodes.md:{i} links to {target} — ID not defined")
+
 # === REPORT ===
 print(f"verify_repo.py — {REPO_ROOT.name}")
 print(f"{'='*50}")
