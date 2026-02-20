@@ -115,7 +115,9 @@ echo "   Candidatos poda (heat ≤ 0): $PODABLES"
 if [ "$TOTAL" -gt 50 ]; then
   EXCESO=$((TOTAL - 50))
   echo "⚠️  $EXCESO sobre el límite"
-  
+fi
+
+# Auto-archive: heat ≤ 0 → ARCHIVE siempre (el árbol no gestiona sus anillos)
   if [ "$DRY_RUN" = false ] && [ "$PODABLES" -gt 0 ]; then
     # Mover episodios con heat ≤ 0 a ARCHIVE al final del archivo
     if ! grep -q "^## ARCHIVE" "$EPISODES"; then
@@ -170,9 +172,6 @@ with open('$EPISODES', 'w') as f:
     f.write('\n')
 "
   fi
-else
-  echo "✅ Dentro del umbral"
-fi
 
 echo ""
 

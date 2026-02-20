@@ -2,12 +2,12 @@
 # boot-slim.sh — Carga contexto mínimo para arranque de instancia
 # Uso: bash scripts/boot-slim.sh [session_id]
 # Clone: git clone --depth 1 (suficiente para boot + commits)
-# Output: SOUL + handoff + vitals + neuromod + self-model + user-model + clock + heartbeat + mapa de archivos
+# Output: KERNEL + handoff + vitals + neuromod + self-model + user-model + clock + heartbeat + mapa de archivos
 
 SESSION=${1:-"unknown"}
 
-echo "========== SOUL.md =========="
-cat boot/SOUL.md
+echo "========== KERNEL.md =========="
+cat boot/KERNEL.md
 echo ""
 echo "========== OPS.md =========="
 cat boot/OPS.md

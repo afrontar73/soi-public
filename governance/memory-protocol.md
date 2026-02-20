@@ -1,5 +1,5 @@
 # Memory Protocol — Referencia completa
-# Movido desde SOUL.md en poda-v1 (2026-02-20)
+# Movido desde KERNEL.md en poda-v1 (2026-02-20)
 
 ## Episodios atómicos (obligatorio al escribir)
 - Resolver pronombres: "él dijo" → "el usuario dijo"
@@ -8,8 +8,12 @@
 - Cada episodio lleva: id, content, created, heat, last_accessed, scene, related[], foresight?
 
 ## Heat score
-- Cada vez que un episodio se referencia: heat += 1, actualizar last_accessed
-- Poda automática: heat < 1 AND age > 30 días → candidato a ARCHIVE
+- Cada vez que un episodio se referencia en sesión: heat += 1, actualizar last_accessed
+- **Auto-decay**: cada sesión, TODOS los episodios que NO se referenciaron pierden heat -1
+- heat = 0 → mover a ARCHIVE automáticamente en sleep.sh (sin preguntar)
+- heat negativo no existe (floor = 0)
+- Episodios [U] con heat ≥ 8: decay -0.5 en vez de -1 (los hechos verificados resisten más)
+- Poda manual sigue disponible para casos urgentes (episodes > 50)
 
 ## Proveniencia (obligatorio en brain/ y episodes.md)
 Cada hecho lleva fuente:

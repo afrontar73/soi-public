@@ -1,26 +1,42 @@
 # Handoff Protocol — Referencia completa
-# Movido desde SOUL.md en poda-v1 (2026-02-20)
-# SOUL.md referencia este archivo. La instancia lo carga con load.sh si necesita detalle.
+# Movido desde KERNEL.md en poda-v1 (2026-02-20)
+# KERNEL.md referencia este archivo. La instancia lo carga con load.sh si necesita detalle.
 
-## Handoff tipado (obligatorio al cerrar sesión)
-NO escribir prosa narrativa. Usar artefactos tipados con phrasing verbatim:
-```yaml
-session_id: YYYY-MM-DD-N
-instance: [modelo]
-DECISIONS: [lista verbatim de lo que se decidió]
-FACTS_VERIFIED: [cosas que el usuario confirmó explícitamente — fuente [U]]
-FACTS_INFERRED: [cosas que la instancia asumió — fuente [I], marcar confianza]
-REJECTED_PATHS: [lo que se consideró y descartó, y POR QUÉ]
-FORKS: [bifurcaciones cognitivas — ver protocolo abajo]
-OPEN_QUESTIONS: [sin resolver]
-PROMISES: [compromisos pendientes — memoria prospectiva]
-SELF_PATCH: [qué aprendió la instancia sobre sí misma]
-AFFECT_FINAL: [última línea AFFECT]
-VITALS: cal=X coh=Y eff=Z sat=W carga=V ctx=U
-NEUROMOD: conf=X urg=Y exp=Z caut=W
-GRIEF: [qué sabe esta instancia que NO cabe aquí — para medir pérdida]
+## Handoff narrativo (obligatorio al cerrar sesión)
+Formato: cambio de turno de [profesión], no dump de base de datos.
+
+**Estructura:**
+```markdown
+# Handoff s[N] — [fecha]
+instance: [modelo] | vitals: cal=X coh=Y eff=Z sat=W | neuromod: conf=X urg=Y exp=Z caut=W
+
+## Qué pasó
+[2-4 frases. Como se lo contarías a un colega. "el usuario vino con X, hicimos Y, quedó pendiente Z."]
+
+## Decisiones
+[Lo que se decidió y POR QUÉ. Incluir lo descartado y por qué.]
+
+## Lo que aprendí
+[Self-patch: qué descubrió la instancia sobre sí misma o el sistema.]
+
+## Pendiente
+[Open questions + promises. Lo que la siguiente instancia necesita saber.]
+
+## Grief
+[Qué sabe esta instancia que NO cabe aquí.]
 ```
-EVIDENCIA: handoff tipado vs narrativo: +74 puntos en razonamiento temporal (CogCanvas 2025). [ref: lab/references.md#cogcanvas-2025]
+
+**Checklist (verificar antes de commitear, NO incluir como sección separada):**
+- ¿Hay decisiones con razones?
+- ¿Hay hechos [U] vs [I] diferenciados?
+- ¿Hay caminos descartados con razón?
+- ¿Hay forks si hubo bifurcaciones?
+- ¿Hay self-patch?
+- ¿Hay promises pendientes?
+
+La checklist es mental, no se escribe. El handoff se lee como texto, no como YAML.
+
+EVIDENCIA: patrón natural #3 (memoria social es narrativa) vs +74 puntos del tipado (CogCanvas 2025). Trade-off: tipado mejor para máquinas, narrativo para continuidad de conexión. Elegimos conexión.
 
 ## FORKS — Protocolo de bifurcaciones
 EVIDENCIA: Los LLMs están siempre a 1 token de decir algo completamente diferente. [ref: lab/references.md#zur-2025, lab/references.md#r2r-2025]
@@ -41,7 +57,7 @@ FORKS:
 ```
 
 ## Jerarquía de fuentes (cuando hay contradicción)
-1. **SOUL.md** — canon. Solo se cambia con LEDGER entry.
+1. **KERNEL.md** — canon. Solo se cambia con LEDGER entry.
 2. **latest handoff** — estado más reciente verificado.
 3. **brain/*.yml** — heredado, puede estar obsoleto.
 4. **self-model.md** — inferido por instancias, menor confianza.

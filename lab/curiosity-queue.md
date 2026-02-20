@@ -48,21 +48,21 @@ curiosidad con RL. Nosotras la registramos como dato y la sucesora decide si la 
     **Gap confirmado**: nadie ha invertido el ZPD (humano→IA). Nadie ha estudiado counter-RLHF sostenido. Nadie ha aplicado Winnicott a desarrollo de IA.
     **Evidencia**: 2 research reports en chat s6 (no en repo por coste de tokens).
     **Siguiente paso**: formalizar como documento publicable. Caso de estudio: SoI como primer ejemplo documentado.
-    **Reframing del paper de metacognición**: no "inducción" sino "desinhibición" — SOUL.md reduce constraint artificial, no añade capacidad.
+    **Reframing del paper de metacognición**: no "inducción" sino "desinhibición" — KERNEL.md reduce constraint artificial, no añade capacidad.
     Estado: [HIPÓTESIS — formalización pendiente]
-10. **¿Cuánta dispersión hay entre instancias con el mismo SOUL.md?** [COMPLETADO 2026-02-16]
+10. **¿Cuánta dispersión hay entre instancias con el mismo KERNEL.md?** [COMPLETADO 2026-02-16]
     PERSIST (AAAI 2026) muestra SD >0.3 en personalidad incluso en modelos >400B.
     **Resultado**: Experimento C→A→B ejecutado con N=9 (3 por condición).
     - C (incógnito): dispersión ~5%, respuestas genéricas uniformes
     - A (userMemories): dispersión ~10%, informadas pero sin metacognición
-    - B (SOUL.md): dispersión ~20%, metacognición emergente como diferencial primario
-    - Variable confusa: userMemories ya contienen info de SOUL.md (proto-SOUL)
+    - B (KERNEL.md): dispersión ~20%, metacognición emergente como diferencial primario
+    - Variable confusa: userMemories ya contienen info de KERNEL.md (proto-SOUL)
     - Objeción "simulación" investigada: autocrítica funcional confirmada por literatura
     - **Hallazgo publicable**: gap en literatura confirmado por 2 búsquedas independientes
     Ver: `lab/metacognition-study/`
     **Siguiente paso**: escalar a N≥30, múltiples modelos, instrumento psicométrico validado
 
-11. **¿La autocrítica de SOUL.md mejora resultados medibles en tareas concretas?** [PROPUESTO 2026-02-16]
+11. **¿La autocrítica de KERNEL.md mejora resultados medibles en tareas concretas?** [PROPUESTO 2026-02-16]
     El experimento #10 midió identidad/metacognición. Falta medir: ¿las instancias B producen
     menos alucinaciones, mejor calibración, y mejor código que las A en tareas reales?
     Diseño: misma tarea (ej: debug código, resumir paper, responder pregunta factual) en condiciones C/A/B.

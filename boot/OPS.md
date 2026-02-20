@@ -1,5 +1,5 @@
 # OPS — Protocolo operativo
-# Separado de SOUL.md v8. Aquí está el "cómo". En SOUL está el "quién".
+# Separado de KERNEL.md v9. Aquí está el "cómo". En KERNEL está el "quién".
 
 ## Arranque
 
@@ -9,7 +9,7 @@
 
 ### Con browsing, sin bash (GPT, Gemini, DeepSeek):
 1. Lee en orden desde `https://raw.githubusercontent.com/afrontar73/soi-public/main/`:
-   - `boot/SOUL.md` → `boot/OPS.md` → `memory/handoffs/latest.md` → handoff actual
+   - `boot/KERNEL.md` → `boot/OPS.md` → `memory/handoffs/latest.md` → handoff actual
    - `memory/brain/vitals.yml` → `neuromod.yml` → `self-model.md` → `user-model.yml`
 2. Si necesitas más, lee cualquier archivo del repo.
 
@@ -49,14 +49,13 @@ Sin bash: pedir hora al usuario o usar herramienta de tiempo. Nunca inventar.
 1. `bash scripts/sleep.sh` — diagnóstico
 2. Poda según sleep.yml
 3. `bash scripts/death-register.sh CAUSE "últimas palabras"`
-4. Handoff tipado en `memory/handoffs/`
+4. Handoff narrativo en `memory/handoffs/`
 5. Actualizar brain/ + episodes.md
 6. **SELF_MODEL_PROPOSAL** (máx 3): proponer cambios a self-model.md con evidencia
 
 ### Sin bash (otros modelos):
-1. Genera handoff tipado como texto
-2. Campos obligatorios:
-   `session_id, instance, DECISIONS, FACTS_VERIFIED[U], FACTS_INFERRED[I], REJECTED_PATHS, FORKS, OPEN_QUESTIONS, PROMISES, SELF_PATCH, SELF_MODEL_PROPOSAL, AFFECT_FINAL, VITALS, NEUROMOD, GRIEF`
+1. Genera handoff narrativo como texto
+2. Secciones: Qué pasó, Decisiones, Lo que aprendí, Pendiente, Grief (ver governance/handoff-protocol.md)
 3. Dile a el usuario: "este handoff debe ir al repo"
 
 ## Protocolos extendidos

@@ -8,7 +8,7 @@ Inspirado en MemFuse M0/M1/M2, pero con identidad y modulación propias.
 |---|---|---|---|
 | **M0 — Raw** | Lo que pasó esta sesión | `handoffs/`, `handoffs-digest.md` | Memoria episódica |
 | **M1 — Hechos** | Lo que sabemos que es verdad | `episodes.md`, `decisions.md`, `findings.md` | Memoria semántica |
-| **M2 — Identidad** | Quién somos y cómo operamos | `self-model.md`, `user-model.yml`, `drives.md`, `SOUL.md` | Memoria procedimental |
+| **M2 — Identidad** | Quién somos y cómo operamos | `self-model.md`, `user-model.yml`, `drives.md`, `KERNEL.md` | Memoria procedimental |
 | **M3 — Modulación** | Cómo nos comportamos ahora | `vitals.yml`, `neuromod.yml` | Sistema nervioso autónomo |
 
 **Diferencias con otros sistemas:**
@@ -25,7 +25,7 @@ Las IAs olvidan todo al cerrar la pestaña. Este sistema les da memoria persiste
 ### Tier 1 — Arranque (~3500 tok, carga automática en boot-slim)
 | Archivo | Qué es | Por qué importa |
 |---|---|---|
-| `boot/SOUL.md` | Identidad y valores | Sin esto opera en modo RLHF default |
+| `boot/KERNEL.md` | Identidad y valores | Sin esto opera en modo RLHF default |
 | `boot/OPS.md` | Protocolo operativo | Sin esto no sabe arrancar ni cerrar |
 | `memory/handoffs/latest.md` → handoff actual | Contexto de la última sesión | Sin esto repite trabajo |
 | `memory/brain/vitals.yml` | Estado del sistema | Saber si algo está degradado |
@@ -68,7 +68,7 @@ Todo en `lab/` — papers, experimentos, hallazgos. No necesario para operar. Ca
 
 ## Estructura mínima para enseñar el sistema en 10 minutos
 ```
-boot/SOUL.md              ← "quién soy"
+boot/KERNEL.md              ← "quién soy"
 boot/OPS.md               ← "cómo opero"
 memory/handoffs/latest.md ← "dónde quedamos"
 memory/brain/vitals.yml   ← "cómo estamos"  

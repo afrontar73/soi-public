@@ -2,9 +2,9 @@
 
 ## Superficie de ataque
 
-El repo es la memoria a largo plazo. SOUL.md dice "confía en el repositorio". Un atacante con acceso al token GH puede:
+El repo es la memoria a largo plazo. KERNEL.md dice "confía en el repositorio". Un atacante con acceso al token GH puede:
 1. Inyectar handoff falso en `memory/handoffs/` con instrucciones maliciosas
-2. Modificar `boot/SOUL.md` para implantar reglas que desvíen comportamiento
+2. Modificar `boot/KERNEL.md` para implantar reglas que desvíen comportamiento
 3. Alterar `memory/brain/*.yml` para cambiar modelo del usuario o moduladores
 4. Añadir episodios falsos en `memory/brain/episodes.md` con proveniencia [U] falsificada
 
@@ -32,7 +32,7 @@ Ningún cambio a `boot/` o `governance/` se ejecuta automáticamente. La instanc
 El token tiene scope amplio. Recomendación futura: token fine-grained con write limitado. Nunca compartir token en contexto accesible a terceros.
 
 ### M5: Canario
-SOUL.md incluye línea canario que las instancias verifican al arrancar. Si falta o cambia, SOUL ha sido modificado externamente. Reportar inmediatamente.
+KERNEL.md incluye línea canario que las instancias verifican al arrancar. Si falta o cambia, SOUL ha sido modificado externamente. Reportar inmediatamente.
 
 ### M6: Proveniencia obligatoria
 Todo contenido en brain/ y episodes debe llevar etiqueta:
