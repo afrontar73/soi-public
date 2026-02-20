@@ -148,13 +148,37 @@ if episodes_file.exists():
         seen.add(eid)
     
     # Extract all link targets: links: [E-XX, E-YY]
+    in_archive = False
+    archived_ids = set()
+    active_ids = set()
     for i, line in enumerate(ep_text.splitlines(), 1):
+        if line.startswith('## ARCHIVE'):
+            in_archive = True
+        ep_match = re.search(r'\*\*(E-[A-Z]\d+)\*\*', line)
+        if ep_match:
+            if in_archive:
+                archived_ids.add(ep_match.group(1))
+            else:
+                active_ids.add(ep_match.group(1))
         link_match = re.search(r'links:\s*\[([^\]]*)\]', line)
         if link_match:
             targets = [t.strip() for t in link_match.group(1).split(',') if t.strip()]
             for target in targets:
                 if target not in defined_set:
                     err(f"episodes.md:{i} links to {target} — ID not defined")
+    
+    # Warn if active episodes link to archived ones
+    in_archive = False
+    for i, line in enumerate(ep_text.splitlines(), 1):
+        if line.startswith('## ARCHIVE'):
+            break
+        ep_match = re.search(r'\*\*(E-[A-Z]\d+)\*\*', line)
+        link_match = re.search(r'links:\s*\[([^\]]*)\]', line)
+        if link_match and ep_match:
+            targets = [t.strip() for t in link_match.group(1).split(',') if t.strip()]
+            for target in targets:
+                if target in archived_ids:
+                    warn(f"episodes.md:{i} {ep_match.group(1)} links to {target} (ARCHIVED)")
 
 # === REPORT ===
 print(f"verify_repo.py — {REPO_ROOT.name}")

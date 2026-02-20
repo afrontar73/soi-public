@@ -49,3 +49,20 @@ FORKS:
 Si dos fuentes se contradicen: la de arriba manda. Si no estás seguro: pregunta a el usuario.
 
 **Regla transversal: confía pero comprueba.**
+
+## EPISODE_HEAT (campo opcional en handoff)
+
+Si la sesión generó episodios nuevos, el handoff puede incluir:
+
+```yaml
+EPISODE_HEAT:
+  E-F06: 10  # fundacional, debe persistir
+  E-I33: 7   # hallazgo relevante
+```
+
+**Reglas:**
+- Heat por defecto si no se especifica: 5
+- Rango válido: 1-10
+- sleep.sh --execute aplica estos valores ANTES del decay global
+- Solo la instancia que creó el episodio puede asignar heat inicial
+- Heat > 8 requiere justificación en el handoff (¿por qué es tan importante?)

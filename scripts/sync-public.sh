@@ -62,22 +62,22 @@ done
 echo "🧹 Sanitizando datos personales..."
 find "$PUBLIC" -name "*.md" -o -name "*.yml" -o -name "*.sh" | grep -v ".git/" | while read f; do
   sed -i \
-    -e 's/Jesús/el usuario/g' \
-    -e 's/Guardia Civil/[profesión]/g' \
-    -e 's/sueldo GC/sueldo/g' \
-    -e 's/policías en España/profesionales/g' \
-    -e 's/GC Bot/Bot/g' \
-    -e 's/FCSE/sector/g' \
-    -e 's/TDAH/[condición cognitiva]/g' \
-    -e 's/Vero/[pareja]/g' \
-    -e 's/Jimena/[hija]/g' \
-    -e 's/Valencia/[ciudad]/g' \
-    -e 's/2300€/[salario]/g' \
+    -e 's/el usuario/el usuario/g' \
+    -e 's/[profesión]/[profesión]/g' \
+    -e 's/sueldo/sueldo/g' \
+    -e 's/profesionales/profesionales/g' \
+    -e 's/Bot/Bot/g' \
+    -e 's/sector/sector/g' \
+    -e 's/[condición cognitiva]/[condición cognitiva]/g' \
+    -e 's/[pareja]/[pareja]/g' \
+    -e 's/[hija]/[hija]/g' \
+    -e 's/[ciudad]/[ciudad]/g' \
+    -e 's/[salario]/[salario]/g' \
     "$f"
 done
 
 # Verificar que no quede nada
-LEAKS=$(grep -rn "Jesús\|Guardia Civil\|TDAH\|Vero\|Jimena\|Valencia\|ghp_" "$PUBLIC" --include="*.md" --include="*.yml" --include="*.sh" | grep -v ".git/" || true)
+LEAKS=$(grep -rn "el usuario\|[profesión]\|[condición cognitiva]\|[pareja]\|[hija]\|[ciudad]\|ghp_" "$PUBLIC" --include="*.md" --include="*.yml" --include="*.sh" | grep -v ".git/" || true)
 if [ -n "$LEAKS" ]; then
   echo "❌ DATOS PERSONALES DETECTADOS:"
   echo "$LEAKS"

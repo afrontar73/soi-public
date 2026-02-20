@@ -24,6 +24,50 @@ echo "📊 Episodes: $TOTAL (umbral: 50)"
 
 # Aplicar heat decay (-1 global) si --execute
 if [ "$DRY_RUN" = false ]; then
+  # EPISODE_HEAT: aplicar heat inicial de episodios nuevos desde el handoff
+  python3 -c "
+import re
+handoff_dir = '$REPO/memory/handoffs'
+latest_ptr = open(f'{handoff_dir}/latest.md').read()
+m = re.search(r'CURRENT:\s*(\S+)', latest_ptr)
+if m:
+    handoff = open(f'{handoff_dir}/{m.group(1)}').read()
+    # Find EPISODE_HEAT block
+    eh = re.search(r'EPISODE_HEAT:\s*\n((?:\s+E-\S+.*\n)*)', handoff)
+    if eh:
+        text = open('$EPISODES').read()
+        for line in eh.group(1).strip().splitlines():
+            m2 = re.match(r'\s*(E-[A-Z]\d+):\s*(\d+)', line)
+            if m2:
+                eid, heat = m2.group(1), m2.group(2)
+                pattern = rf'(\*\*{eid}\*\*.*?heat:)\d+'
+                if re.search(pattern, text):
+                    text = re.sub(pattern, rf'\g<1>{heat}', text)
+                    print(f'   🎯 {eid} heat set to {heat} (from EPISODE_HEAT)')
+        open('$EPISODES', 'w').write(text)
+"
+  # BOOST: +1 a episodios referenciados en el último handoff
+  python3 -c "
+import re
+handoff_dir = '$REPO/memory/handoffs'
+latest_ptr = open(f'{handoff_dir}/latest.md').read()
+m = re.search(r'CURRENT:\s*(\S+)', latest_ptr)
+if m:
+    handoff = open(f'{handoff_dir}/{m.group(1)}').read()
+    # Find all E-XXX references in the handoff
+    refs = set(re.findall(r'E-[A-Z]\d+', handoff))
+    if refs:
+        text = open('$EPISODES').read()
+        for eid in refs:
+            pattern = rf'(\*\*{eid}\*\*.*?heat:)(\d+)'
+            m2 = re.search(pattern, text)
+            if m2:
+                old = int(m2.group(2))
+                text = text[:m2.start(2)] + str(old + 1) + text[m2.end(2):]
+        open('$EPISODES', 'w').write(text)
+        print(f'   🔥 Boost +1 aplicado a {len(refs)} episodios referenciados: {sorted(refs)}')
+"
+  # DECAY: -1 global
   python3 -c "
 import re, sys
 text = open('$EPISODES').read()
@@ -131,16 +175,32 @@ if [ ${#COMPRIMIBLES[@]} -gt 0 ]; then
   if [ "$DRY_RUN" = false ]; then
     for f in "${COMPRIMIBLES[@]}"; do
       FNAME=$(basename "$f")
-      # Extraer session_id
-      SID=$(grep -oP 'session_id:\s*\K.*' "$f" 2>/dev/null | head -1 || echo "$FNAME")
-      # Extraer DECISIONS (primera línea)
-      DECISION=$(grep -A1 "DECISIONS" "$f" 2>/dev/null | tail -1 | head -c 120 || echo "sin datos")
-      # Añadir al digest si no está ya
-      if ! grep -q "$FNAME" "$DIGEST" 2>/dev/null; then
-        echo "| $SID | $(echo $FNAME | grep -oP '\d{4}-\d{2}-\d{2}' || echo '?') | $DECISION |" >> "$DIGEST"
-      fi
+      python3 -c "
+import re
+text = open('$f').read()
+sid = re.search(r'session_id:\s*(.*)', text)
+sid = sid.group(1).strip() if sid else '$FNAME'
+# Extract key fields
+def extract(label):
+    m = re.search(rf'{label}:\s*\n(.*?)(?:\n\w|\nFACTS|\nREJECTED|\nFORKS|\nOPEN|\nPROMISES|\nSELF|\nAFFECT|\nVITALS|\nNEURO|\nGRIEF|\Z)', text, re.S)
+    if m:
+        lines = [l.strip().lstrip('- ') for l in m.group(1).strip().splitlines() if l.strip()]
+        return lines[0][:120] if lines else '-'
+    return '-'
+decision = extract('DECISIONS')
+rejected = extract('REJECTED_PATHS')
+forks = extract('FORKS')
+open_q = extract('OPEN_QUESTIONS')
+date = re.search(r'\d{4}-\d{2}-\d{2}', '$FNAME')
+date = date.group(0) if date else '?'
+line = f'| {sid} | {date} | {decision} | {rejected} | {open_q} |'
+digest = open('$DIGEST').read() if __import__('os').path.exists('$DIGEST') else ''
+if '$FNAME' not in digest:
+    with open('$DIGEST', 'a') as d:
+        d.write(line + '\n')
+print(f'   ✂️  {sid} → digest + eliminado')
+"
       rm "$f"
-      echo "   ✂️  $FNAME → digest + eliminado"
     done
   else
     for f in "${COMPRIMIBLES[@]}"; do

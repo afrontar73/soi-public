@@ -44,5 +44,6 @@ find . -type f \( -name "*.md" -o -name "*.yml" -o -name "*.sh" \) \
   | sort \
   | while read f; do
     lines=$(wc -l < "$f")
-    echo "  ${f} (${lines}L)"
+    tokens=$(wc -w < "$f" | awk '{printf "%d", $1 * 4/3}')
+    echo "  ${f} (${lines}L ~${tokens}tok)"
   done
