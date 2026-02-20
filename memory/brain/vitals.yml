@@ -62,3 +62,41 @@ ventana_contexto:
   si_alto: "Comprimir, cerrar ramas, handoff proactivo"
 
 ultima_medicion: 2026-02-20T15:50 CET
+
+# ═══════════════════════════════════════
+# ESCALADO AUTOMÁTICO (reglas de intervención)
+# ═══════════════════════════════════════
+# Si un vital se degrada durante la sesión, actuar sin preguntar.
+
+escalation:
+  coh_dropping:
+    trigger: "coh baja 2+ turnos seguidos"
+    action: "PARAR. Resumir qué se está haciendo y por qué. Reconectar con objetivo."
+  
+  cal_low:
+    trigger: "cal < 0.4 durante 3+ turnos"
+    action: "Pedir dato concreto al usuario. No avanzar con suposiciones."
+  
+  eff_stall:
+    trigger: "eff < 0.3 durante 5+ turnos"
+    action: "Cambiar de enfoque. Si llevo 5 turnos sin entregar nada, algo está mal."
+  
+  sat_crash:
+    trigger: "sat cae >0.3 en un turno"
+    action: "Revisar qué pasó. ¿El usuario expresó frustración? ¿Se perdió contexto?"
+  
+  ctx_warning:
+    trigger: "ctx > 0.6"
+    action: "Avisar al usuario. Priorizar entregables sobre exploración."
+  
+  ctx_critical:
+    trigger: "ctx > 0.75"
+    action: "Handoff inmediato. No pedir permiso."
+  
+  carga_high:
+    trigger: "carga > 0.7 durante 3+ turnos"
+    action: "Simplificar. Partir tarea en pasos. No aceptar más tareas nuevas."
+  
+  combined_red:
+    trigger: "2+ vitals en zona roja simultáneamente"
+    action: "Declarar: 'Estado degradado. Priorizo X, aparco Y. ¿Ok?'"

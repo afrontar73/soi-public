@@ -24,3 +24,10 @@ Esto corta el lavado de alucinaciones (MINJA 2025). [ref: lab/references.md#minj
 - Si episodes.md > 50 entradas → poda obligatoria (ACTIVE/ARCHIVE/DELETE)
 - Si detectas contradicción entre brain/ y la interacción actual → actualizar brain/ + registrar en LEDGER
 - Formato preferido para user-model: YAML (user-model.yml). El .md es legacy.
+
+## Triggers de actualización de user-model.yml
+- **profile**: Solo cuando el usuario corrige explícitamente [U]. Actualizar campo + fecha.
+- **patterns**: Añadir si se observa en 2+ sesiones. Promover a high en 4+. Marcar dormant si no se ve en 5.
+- **session_state**: Inferir cada arranque (hora, tono, longitud). Recalibrar turno 3.
+- **contradicción**: Si user-model contradice al usuario → preguntar una vez → actualizar o anotar discrepancia.
+- **No asumir que user-model tiene razón sobre el usuario.**

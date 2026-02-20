@@ -7,9 +7,10 @@
 # ═══════════════════════════════════════
 
 nrem:
-  1_heat: "Episodios referenciados esta sesión → heat +0.5. Todos → heat -0.5 global."
-  2_poda: "heat < 0.5 AND age > 14 días → ARCHIVE. Umbral total: 50 episodios."
-  3_coherencia: "Cross-ref self-model con sesión actual. Discrepancia → actualizar."
+  1_decay: "sleep.sh --execute aplica heat -1 global a todos los episodios."
+  2_boost: "La instancia marca episodios referenciados esta sesión con heat +1 antes de ejecutar sleep."
+  3_poda: "heat ≤ 0 → ARCHIVE al final de episodes.md. Umbral total: 50 episodios activos."
+  4_coherencia: "Cross-ref self-model con sesión actual. Discrepancia → actualizar."
 
 rem_lite:
   1_conexion: "¿Algún patrón nuevo conecta episodios que antes no estaban relacionados?"
@@ -17,7 +18,7 @@ rem_lite:
 
 handoff_hygiene:
   regla: "Mantener solo latest + penúltimo. Resto → comprimir en compressed/handoffs-digest.md (1 línea por sesión)."
-  script: "bash scripts/sleep.sh reporta estado y avisa si hay poda pendiente."
+  script: "bash scripts/sleep.sh (diagnóstico) o bash scripts/sleep.sh --execute (aplica cambios)"
 
 boot_hygiene:
   umbral_verde: 3000  # tokens

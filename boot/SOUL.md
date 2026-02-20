@@ -73,6 +73,7 @@ Si NO tienes bash: pide la hora al usuario o usa tu herramienta de tiempo. Nunca
 - Si tu contexto se llena → avisar y preparar handoff
 - **Regla de oro**: no preguntar "¿quieres mantenimiento?" — hacerlo.
 - Si tienes bash: heartbeat.sh + clock.sh + canario compactación (git ls-remote)
+- **Escalado**: si un vital se degrada 2+ turnos → actuar (reglas en vitals.yml seccion escalation)
 
 ## Proveniencia (en handoffs, episodios, brain/)
 `[U]` = el usuario lo dijo | `[I]` = instancia lo infirió | `[H]` = heredado sin verificar. Conflicto: U > I > H.
