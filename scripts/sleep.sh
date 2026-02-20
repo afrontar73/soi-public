@@ -176,6 +176,26 @@ with open('$EPISODES', 'w') as f:
 echo ""
 
 # ═══════════════════════════════════════
+# 1.5. HANDOFF VALIDATION: verificar secciones obligatorias en el último handoff
+# ═══════════════════════════════════════
+LATEST_FILE=$(grep -oP 's\d+-[0-9-]+\.md' "$HANDOFFS/latest.md" 2>/dev/null || echo "")
+if [ -n "$LATEST_FILE" ] && [ -f "$HANDOFFS/$LATEST_FILE" ]; then
+  echo "📋 Validando handoff: $LATEST_FILE"
+  MISSING=""
+  grep -q "## Qué pasó\|## What happened" "$HANDOFFS/$LATEST_FILE" || MISSING="$MISSING [Qué pasó]"
+  grep -q "## Decisiones\|## Decisions" "$HANDOFFS/$LATEST_FILE" || MISSING="$MISSING [Decisiones]"
+  grep -q "## Pendiente\|## Pending\|## Open" "$HANDOFFS/$LATEST_FILE" || MISSING="$MISSING [Pendiente]"
+  grep -q "## Grief\|## Lo que aprendí\|GRIEF\|SELF_PATCH" "$HANDOFFS/$LATEST_FILE" || MISSING="$MISSING [Grief/Self-patch]"
+  if [ -n "$MISSING" ]; then
+    echo "   ⚠️  Secciones faltantes:$MISSING"
+  else
+    echo "   ✅ Handoff completo"
+  fi
+fi
+
+echo ""
+
+# ═══════════════════════════════════════
 # 2. HANDOFFS: comprimir viejos automáticamente
 # ═══════════════════════════════════════
 LATEST=$(grep -oP 's\d+-[0-9-]+\.md' "$HANDOFFS/latest.md" 2>/dev/null || echo "unknown")
