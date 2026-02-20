@@ -8,6 +8,9 @@ SESSION=${1:-"unknown"}
 
 echo "========== SOUL.md =========="
 cat boot/SOUL.md
+echo ""
+echo "========== OPS.md =========="
+cat boot/OPS.md
 
 echo ""
 echo "========== HANDOFF (latest) =========="

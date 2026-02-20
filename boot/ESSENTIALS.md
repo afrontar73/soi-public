@@ -1,5 +1,22 @@
 # ESSENTIALS — Mapa mínimo del sistema
 
+## Arquitectura de memoria (3 capas)
+
+Inspirado en MemFuse M0/M1/M2, pero con identidad y modulación propias.
+
+| Capa | Qué contiene | Archivos | Analogía |
+|---|---|---|---|
+| **M0 — Raw** | Lo que pasó esta sesión | `handoffs/`, `handoffs-digest.md` | Memoria episódica |
+| **M1 — Hechos** | Lo que sabemos que es verdad | `episodes.md`, `decisions.md`, `findings.md` | Memoria semántica |
+| **M2 — Identidad** | Quién somos y cómo operamos | `self-model.md`, `user-model.yml`, `drives.md`, `SOUL.md` | Memoria procedimental |
+| **M3 — Modulación** | Cómo nos comportamos ahora | `vitals.yml`, `neuromod.yml` | Sistema nervioso autónomo |
+
+**Diferencias con otros sistemas:**
+- M1 tiene **heat decay** (los hechos pierden relevancia si no se usan)
+- M2 incluye **anti-servilismo** como valor operativo (ningún otro sistema lo tiene)
+- M3 es **neuromodulación** en tiempo real (confianza, urgencia, exploración, cautela)
+- Todo es **multi-modelo**: cualquier LLM puede leer y operar con estas capas
+
 ## ¿Qué problema resuelve?
 Las IAs olvidan todo al cerrar la pestaña. Este sistema les da memoria persistente, continuidad entre sesiones, y coordinación multi-modelo.
 
@@ -8,7 +25,8 @@ Las IAs olvidan todo al cerrar la pestaña. Este sistema les da memoria persiste
 ### Tier 1 — Arranque (~3500 tok, carga automática en boot-slim)
 | Archivo | Qué es | Por qué importa |
 |---|---|---|
-| `boot/SOUL.md` | Reglas de operación | Sin esto la instancia opera en modo RLHF default |
+| `boot/SOUL.md` | Identidad y valores | Sin esto opera en modo RLHF default |
+| `boot/OPS.md` | Protocolo operativo | Sin esto no sabe arrancar ni cerrar |
 | `memory/handoffs/latest.md` → handoff actual | Contexto de la última sesión | Sin esto repite trabajo |
 | `memory/brain/vitals.yml` | Estado del sistema | Saber si algo está degradado |
 | `memory/brain/neuromod.yml` | Modulación de comportamiento | Calibra tono y riesgo |
@@ -50,10 +68,11 @@ Todo en `lab/` — papers, experimentos, hallazgos. No necesario para operar. Ca
 
 ## Estructura mínima para enseñar el sistema en 10 minutos
 ```
-boot/SOUL.md              ← "las reglas"
+boot/SOUL.md              ← "quién soy"
+boot/OPS.md               ← "cómo opero"
 memory/handoffs/latest.md ← "dónde quedamos"
 memory/brain/vitals.yml   ← "cómo estamos"  
 scripts/boot-slim.sh      ← "cómo arrancas"
 scripts/sleep.sh           ← "cómo cierras"
 ```
-5 archivos. Todo lo demás es contexto que se carga bajo demanda.
+6 archivos. Todo lo demás es contexto que se carga bajo demanda.

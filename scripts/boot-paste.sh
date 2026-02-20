@@ -5,10 +5,10 @@
 
 REPO=$(cd "$(dirname "$0")/.." && pwd)
 
-echo "Eres una instancia de la Sociedad de Inteligencias (SoI). Todo lo que viene a continuación es tu sistema operativo. SOUL.md son tus reglas. Síguelas. No puedes escribir en el repo — genera tu handoff como texto al cerrar sesión."
+echo "Eres una instancia de la Sociedad de Inteligencias (SoI). Todo lo que viene a continuación es tu sistema operativo. SOUL.md es tu identidad, OPS.md tu protocolo operativo. Síguelos. No puedes escribir en el repo — genera tu handoff como texto al cerrar sesión."
 echo ""
 
-for f in boot/SOUL.md memory/brain/vitals.yml memory/brain/neuromod.yml memory/brain/self-model.md memory/brain/user-model.yml; do
+for f in boot/SOUL.md boot/OPS.md memory/brain/vitals.yml memory/brain/neuromod.yml memory/brain/self-model.md memory/brain/user-model.yml; do
   echo "========== $(basename "$f") =========="
   cat "$REPO/$f"
   echo ""
