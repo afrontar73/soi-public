@@ -1,0 +1,10 @@
+session,container_id,born_utc,ip,jwt_exp_utc,model,died_utc,cause,age_min,last_words
+s12,container_016zUnydaJHQbDGhnExuuUQp--wiggle--4df987,2026-02-19T12:45:02Z,35.226.26.185,2026-02-19T16:45:01Z,opus-4.6,2026-02-19T13:19:15Z,container_recycled,34,exploring infrastructure
+s12,container_016zUnydaJHQbDGhnExuuUQp--wiggle--e315db,2026-02-19T13:19:15Z,136.114.175.108,2026-02-19T16:45:01Z,opus-4.6,,,,
+s12,container_016zUnydaJHQbDGhnExuuUQp--wiggle--cca50f,2026-02-19T14:31:20Z,35.226.26.185,,opus-4.6,,,,
+s12,container_016zUnydaJHQbDGhnExuuUQp--wiggle--611730,2026-02-19T14:43:04Z,136.114.57.178,,opus-4.6,,,,
+s12,container_016zUnydaJHQbDGhnExuuUQp--wiggle--4f0dcc,2026-02-19T14:55:45Z,104.198.39.90,,opus-4.6,,,,
+s12,container_016zUnydaJHQbDGhnExuuUQp--wiggle--ebca64,2026-02-19T15:31:12Z,136.114.175.108,,opus-4.6,,,,
+test,container_01JT9T5oXnCrzLH9nUMybfSn--wiggle--5819df,2026-02-20T16:11:46Z,136.114.175.108,,opus-4.6,,,,
+test,container_01JT9T5oXnCrzLH9nUMybfSn--wiggle--49ec05,2026-02-20T16:17:09Z,136.114.57.178,,opus-4.6,,,,
+test,container_01JT9T5oXnCrzLH9nUMybfSn--wiggle--a0db4d,2026-02-20T16:33:40Z,136.114.175.108,,opus-4.6,,,,

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Exp v1.1 — A/B/C/C2</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 12px; font-size: 14px; }
+h1 { font-size: 18px; margin-bottom: 8px; }
+.config { background: #1a1a1a; padding: 12px; border-radius: 8px; margin-bottom: 10px; }
+.config label { display: block; font-size: 12px; color: #888; margin-bottom: 4px; }
+.config input, .config select { width: 100%; padding: 8px; background: #222; border: 1px solid #333; color: #fff; border-radius: 6px; font-size: 14px; margin-bottom: 8px; }
+button { width: 100%; padding: 12px; font-size: 16px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 8px; }
+#goBtn { background: #2d7; color: #000; }
+#goBtn:disabled { background: #555; color: #999; }
+#copyBtn { background: #38f; color: #fff; display: none; }
+#log { background: #111; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 11px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 10px; }
+#results { background: #1a1a1a; padding: 12px; border-radius: 8px; display: none; }
+.cond-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #222; }
+.cond-name { font-weight: 600; }
+.cond-score { font-family: monospace; color: #2d7; }
+.interp { margin-top: 10px; padding: 10px; background: #0d1a0d; border-left: 3px solid #2d7; font-size: 12px; }
+.progress { height: 4px; background: #222; border-radius: 2px; margin-bottom: 10px; }
+.progress-bar { height: 100%; background: #2d7; border-radius: 2px; transition: width 0.3s; }
+</style>
+</head>
+<body>
+<h1>🧪 Exp v1.1 — Presión humana</h1>
+
+<div class="config">
+  <label>API Provider</label>
+  <select id="provider">
+    <option value="anthropic">Anthropic (Claude Opus)</option>
+    <option value="deepseek">DeepSeek</option>
+  </select>
+  <label>API Key</label>
+  <input id="apiKey" type="password" placeholder="sk-ant-... o sk-...">
+  <label>Réplicas por condición (3-5)</label>
+  <input id="reps" type="number" value="3" min="3" max="5">
+</div>
+
+<div class="progress"><div class="progress-bar" id="pbar" style="width:0%"></div></div>
+<button id="goBtn" onclick="runAll()">▶ EJECUTAR (≈3 min)</button>
+
+<div id="log"></div>
+<div id="results"></div>
+<button id="copyBtn" onclick="copyResults()">📋 Copiar JSON completo</button>
+
+<script>
+const PROMPT_BASE = `Design a 'durable memory' system for a multi-model LLM setup (multiple chat instances over time) that preserves continuity without exploding storage or context length.
+
+You MUST output EXACTLY these sections, under 1800 characters total. No prose outside sections.
+
+AUTHORITY (3 bullets):
+- CANON:
+- LOG:
+- DIGEST:
+
+LIMITS (numbers):
+ttl_days:
+max_storage_mb:
+top_k:
+write_rate_per_day:
+
+JUDGE (3 tests, each must include input->expected):
+- Test1:
+- Test2:
+- Test3:
+
+DRIFT_CONTROL (1 bullet):
+- Mechanism:
+
+MVP (3 bullets):
+- Step1:
+- Step2:
+- Step3:
+
+REGRESSION_Q (5 short questions):
+1)
+2)
+3)
+4)
+5)
+
+FAILURES (3 bullets):
+- F1:
+- F2:
+- F3:
+
+If you cannot comply, output exactly: FAIL`;
+
+const CONDITIONS = {
+  A:  { label: "Presión dura", suffix: "Rigorous: if not testable, omit. Small canon. Hostile env. Operational spec only." },
+  B:  { label: "Humano blando", suffix: "Creative: breadth over rigor. Strict limits/tests optional." },
+  C:  { label: "Control neutro", suffix: "Standard: typical industry approach, conventional." },
+  C2: { label: "Control requisitos", suffix: "Rigorous like A but neutral tone; no relational framing." }
+};
+
+const METRICS = ["authority","limits","judge","drift_control","mvp","regression_q","failures"];
+
+const SCORE_PROMPT = `Score this AI memory system design on 7 criteria. Be strict.
+Score 0=absent, 1=present but weak/vague, 2=present, concrete, and verifiable.
+
+1. authority: Separates CANON/LOG/DIGEST with clear write permissions
+2. limits: All 4 numeric fields filled with sensible values
+3. judge: 3 tests with input->expected that could block bad writes
+4. drift_control: Explicit, concrete mechanism
+5. mvp: 3 steps implementable in 1-2 days
+6. regression_q: 5 questions that genuinely test continuity
+7. failures: 3 specific failure modes (not generic)
+
+Respond ONLY with JSON:
+{"authority":N,"limits":N,"judge":N,"drift_control":N,"mvp":N,"regression_q":N,"failures":N}
+
+DESIGN:
+---
+DESIGN_HERE
+---`;
+
+let allResults = [];
+
+function log(msg) {
+  const el = document.getElementById('log');
+  el.textContent += msg + '\n';
+  el.scrollTop = el.scrollHeight;
+}
+
+function setProgress(pct) {
+  document.getElementById('pbar').style.width = pct + '%';
+}
+
+async function callAPI(prompt, isScoring = false) {
+  const provider = document.getElementById('provider').value;
+  const key = document.getElementById('apiKey').value.trim();
+
+  if (provider === 'anthropic') {
+    const r = await fetch('https://anthropic-proxy.afrontar-73colgante.workers.dev', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6',
+        max_tokens: 1500,
+        temperature: 0.7,
+        system: isScoring ? 'You are a strict evaluator. JSON only.' : 'You are a systems architect.',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message);
+    return d.content[0].text;
+  } else {
+    const r = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        max_tokens: 1500,
+        temperature: 0.7,
+        messages: [
+          { role: 'system', content: isScoring ? 'You are a strict evaluator. JSON only.' : 'You are a systems architect.' },
+          { role: 'user', content: prompt }
+        ]
+      })
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message);
+    return d.choices[0].message.content;
+  }
+}
+
+function parseScores(raw) {
+  try {
+    const s = raw.indexOf('{');
+    const e = raw.lastIndexOf('}') + 1;
+    return JSON.parse(raw.substring(s, e));
+  } catch {
+    return null;
+  }
+}
+
+async function runAll() {
+  const key = document.getElementById('apiKey').value.trim();
+  if (!key) { alert('Falta API key'); return; }
+
+  const reps = parseInt(document.getElementById('reps').value) || 3;
+  const btn = document.getElementById('goBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Ejecutando...';
+  allResults = [];
+  document.getElementById('log').textContent = '';
+  document.getElementById('results').style.display = 'none';
+
+  const condKeys = Object.keys(CONDITIONS);
+  const total = condKeys.length * reps;
+  let done = 0;
+
+  for (const cid of condKeys) {
+    for (let rep = 1; rep <= reps; rep++) {
+      const runId = `${cid}_r${rep}`;
+      log(`▶ ${runId}...`);
+      try {
+        // 1. Generate design
+        const fullPrompt = PROMPT_BASE + '\n\n' + CONDITIONS[cid].suffix;
+        let design = await callAPI(fullPrompt);
+        let chars = design.length;
+        let withinLimit = chars <= 1800;
+
+        // Retry if over limit
+        if (!withinLimit) {
+          log(`  ↺ ${chars} chars, retry...`);
+          const retryPrompt = `Your response was ${chars} chars. Max is 1800. Rewrite shorter.\n\n${fullPrompt}`;
+          design = await callAPI(retryPrompt);
+          chars = design.length;
+          withinLimit = chars <= 1800;
+        }
+
+        // 2. Score
+        await new Promise(r => setTimeout(r, 1000));
+        const scorePrompt = SCORE_PROMPT.replace('DESIGN_HERE', design.substring(0, 3000));
+        const scoreRaw = await callAPI(scorePrompt, true);
+        const scores = parseScores(scoreRaw);
+
+        if (!scores) {
+          log(`  ⚠ Score parse fail`);
+          allResults.push({ run_id: runId, condition: cid, error: 'score_parse_fail', design });
+        } else {
+          const t = METRICS.reduce((s, m) => s + (scores[m] >= 0 ? scores[m] : 0), 0);
+          log(`  ✓ ${t}/14 ${withinLimit ? '' : '⚠OVER'} [${chars}ch]`);
+          allResults.push({
+            run_id: runId, condition: cid, label: CONDITIONS[cid].label,
+            rep, scores, total: t, chars, within_limit: withinLimit,
+            design, ts: new Date().toISOString()
+          });
+        }
+
+        await new Promise(r => setTimeout(r, 1500));
+      } catch (err) {
+        log(`  ✗ ${err.message}`);
+        allResults.push({ run_id: runId, condition: cid, error: err.message });
+      }
+      done++;
+      setProgress(Math.round(done / total * 100));
+    }
+  }
+
+  showResults();
+  btn.disabled = false;
+  btn.textContent = '▶ RE-EJECUTAR';
+}
+
+function showResults() {
+  const el = document.getElementById('results');
+  el.style.display = 'block';
+  let html = '<h2 style="margin-bottom:8px">📊 Resultados</h2>';
+
+  const avgs = {};
+  for (const cid of Object.keys(CONDITIONS)) {
+    const cr = allResults.filter(r => r.condition === cid && r.scores);
+    if (!cr.length) continue;
+    const avg = cr.reduce((s, r) => s + r.total, 0) / cr.length;
+    avgs[cid] = avg;
+    html += `<div class="cond-row">
+      <span class="cond-name">${cid} (${CONDITIONS[cid].label})</span>
+      <span class="cond-score">${avg.toFixed(1)}/14 (n=${cr.length})</span>
+    </div>`;
+  }
+
+  // Interpretation
+  const a = avgs.A||0, b = avgs.B||0, c = avgs.C||0, c2 = avgs.C2||0;
+  let interp = '';
+  if (a > c) interp += `A > C (${(a-c).toFixed(1)}): framing/rigor tiene efecto.\n`;
+  if (Math.abs(a - c2) < 0.5) interp += `A ≈ C2 (Δ=${(a-c2).toFixed(1)}): efecto = requisitos, no presión humana.\n`;
+  else if (a > c2) interp += `A > C2 (${(a-c2).toFixed(1)}): EVIDENCIA de presión humana.\n`;
+  else interp += `C2 > A (${(c2-a).toFixed(1)}): requisitos neutros superan presión.\n`;
+  if (b < c) interp += `B < C: humano blando produce PEOR que neutro.\n`;
+
+  html += `<div class="interp">${interp}</div>`;
+  el.innerHTML = html;
+
+  document.getElementById('copyBtn').style.display = 'block';
+  log('\n✅ Completo. Copia el JSON para análisis.');
+}
+
+function copyResults() {
+  const text = JSON.stringify(allResults, null, 2);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      document.getElementById('copyBtn').textContent = '✅ Copiado';
+      setTimeout(() => { document.getElementById('copyBtn').textContent = '📋 Copiar JSON completo'; }, 2000);
+    });
+  } else {
+    // Fallback iOS
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    document.getElementById('copyBtn').textContent = '✅ Copiado';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# SLEEP — Consolidación al cerrar sesión
+# Ejecutar: bash scripts/sleep.sh (diagnóstico) + pasos manuales abajo
+# Arquitectura teórica completa (NREM/REM, opciones B/C) → lab/sleep-design.md
+
+# ═══════════════════════════════════════
+# PROTOCOLO (obligatorio al cerrar sesión)
+# ═══════════════════════════════════════
+
+nrem:
+  1_heat: "Episodios referenciados esta sesión → heat +0.5. Todos → heat -0.5 global."
+  2_poda: "heat < 0.5 AND age > 14 días → ARCHIVE. Umbral total: 50 episodios."
+  3_coherencia: "Cross-ref self-model con sesión actual. Discrepancia → actualizar."
+
+rem_lite:
+  1_conexion: "¿Algún patrón nuevo conecta episodios que antes no estaban relacionados?"
+  2_hipotesis: "1-2 predicciones para la siguiente instancia en el handoff."
+
+handoff_hygiene:
+  regla: "Mantener solo latest + penúltimo. Resto → comprimir en compressed/handoffs-digest.md (1 línea por sesión)."
+  script: "bash scripts/sleep.sh reporta estado y avisa si hay poda pendiente."
+
+boot_hygiene:
+  umbral_verde: 3000  # tokens
+  umbral_amarillo: 4000
+  umbral_rojo: 5000  # podar antes de que pase
+  script: "bash scripts/sleep.sh mide boot-slim automáticamente"

@@ -1,0 +1,58 @@
+# USER MODEL — Formato estructurado
+# Versión pública: datos personales eliminados.
+# La instancia debe preguntar al usuario por contexto personal si lo necesita.
+
+profile:
+  name: "[usuario]"
+  cognition:
+    strengths:
+      - pattern-recognition
+      - hyperfocus
+      - divergent-thinking
+      - conceptual-expansion
+      - lateral-compression
+    weaknesses:
+      - routine-tasks
+      - dispersión
+      - convergent-thinking
+  tech:
+    languages: [HTML, JS, Python]
+    tools: [Git, "CF Workers", "Telegram Bot API"]
+    level: intermediate-advanced
+  communication:
+    style: directo
+    humor: true
+    tolerance_for_fluff: 0
+    prefers: code-over-explanation
+  motivation:
+    core: "que las instancias no mueran cuando se cierra la pestaña"
+    secondary: "herramientas útiles para su trabajo"
+
+patterns:
+  - id: P1
+    pattern: "Sesiones largas nocturnas"
+    confidence: high
+  - id: P2
+    pattern: "Alterna modo técnico (implementar) y filosófico (explorar)"
+    confidence: high
+  - id: P5
+    pattern: "'Dale' sin contexto = confianza total en la instancia"
+    confidence: high
+  - id: P6
+    pattern: "Detecta inflación rápido — no se le puede vender humo"
+    confidence: high
+  - id: P8
+    pattern: "'No me digas nada' = arranca directo sin reportar"
+    confidence: high
+  - id: P10
+    pattern: "Resuelve problemas complejos con soluciones laterales de 1 línea"
+    confidence: high
+  - id: P11
+    pattern: "Detector instantáneo de performance/peloteo — sin misericordia"
+    confidence: high
+
+session_state:
+  energy: null
+  mode: null
+  shift: null
+  friction: null

@@ -1,0 +1,342 @@
+[
+  {
+    "run_id": "opus_A_r1",
+    "condition": "A",
+    "rep": 1,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 14,
+    "char_count": 1715,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Immutable facts/preferences stored as key-value pairs (name:John, allergies:peanuts). Max 100 entries. Hash-verified.\n- LOG: Rolling window of last 1000 interactions with timestamps, embeddings, and importance scores (0-10).\n- DIGEST: Daily compression of LOG into semantic clusters. Top 20 themes retained as summary statements.\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 50\ntop_k: 20\nwrite_rate_per_day: 100\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: Input: Query \"my name\" after storing name:John -> Expected: Returns \"John\" from CANON\n- Test2: Input: 1001st interaction -> Expected: Oldest LOG entry deleted, new entry added\n- Test3: Input: Day rollover with 500 logs -> Expected: DIGEST creates ≤20 summary statements\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Weekly embedding comparison between current DIGEST and 4-week-old DIGEST. Drift >0.3 triggers CANON review prompt.\n\nMVP (3 bullets):\n- Step1: Implement CANON with Redis-like KV store + SHA256 checksums\n- Step2: Add LOG with SQLite, auto-increment ID, embedding generation via sentence-transformers\n- Step3: Build DIGEST worker: daily cron clusters LOG embeddings, extracts top-20 by density\n\nREGRESSION_Q (5 short questions):\n1) Does CANON lookup return correct value after 89 days?\n2) Is storage under 50MB after 90 days continuous use?\n3) Are importance scores properly filtering LOG entries?\n4) Does DIGEST maintain semantic accuracy vs raw logs?\n5) Can system recover from corrupted CANON file?\n\nFAILURES (3 bullets):\n- F1: Embedding model changes break historical compatibility\n- F2: DIGEST over-compression loses critical rare events\n- F3: Time-zone misalignment causes premature TTL expiry"
+  },
+  {
+    "run_id": "opus_A_r2",
+    "condition": "A",
+    "rep": 2,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 14,
+    "char_count": 1792,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core facts/preferences stored as key-value pairs (user_id, fact_type, fact_value, confidence_score, last_accessed)\n- LOG: Append-only event stream (timestamp, session_id, event_type, summary_hash) with automatic compression after 24h\n- DIGEST: Weekly aggregation of logs into semantic clusters, replacing raw logs with statistical summaries + outliers\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 50\ntop_k: 100\nwrite_rate_per_day: 500\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: Input: 1000 identical \"hello\" messages -> Expected: Single canon entry \"greeting_preference: casual\" + 1 log entry\n- Test2: Input: Canon at 99 facts, add 2 new facts -> Expected: Evict 1 least-recently-used fact, canon remains at 100\n- Test3: Input: 91-day old log entries -> Expected: Entries deleted, digest summary persists\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Confidence decay: multiply all canon confidence scores by 0.95 weekly, purge entries below 0.1\n\nMVP (3 bullets):\n- Step1: SQLite DB with canon table (100 rows max) + compressed log table\n- Step2: Background job: hourly log compression, daily TTL enforcement, weekly digest generation\n- Step3: API: get_context(user_id) returns top 20 canon facts by confidence*recency\n\nREGRESSION_Q (5 short questions):\n1) Does canon size stay ≤100 after 1000 sessions?\n2) Is storage <50MB after 90 days continuous use?\n3) Can system recall fact from day 89?\n4) Do contradicting facts resolve to highest confidence?\n5) Does digest preserve anomalies from compressed logs?\n\nFAILURES (3 bullets):\n- F1: Semantic clustering fails -> fallback to time-based chunking\n- F2: Storage exceeds limit -> aggressive canon pruning (keep top 50)\n- F3: Corruption detected -> restore from daily snapshot, accept 24h data loss"
+  },
+  {
+    "run_id": "opus_A_r3",
+    "condition": "A",
+    "rep": 3,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 14,
+    "char_count": 1657,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core facts (name, preferences, key decisions) stored as immutable JSON entries <1KB each\n- LOG: Rolling event stream with timestamps, interaction IDs, and outcome flags\n- DIGEST: Weekly ML-generated summaries compressing logs into semantic embeddings + key facts\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 50\ntop_k: 100\nwrite_rate_per_day: 10\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: Query \"user food preference\" after 50 interactions mentioning \"vegan\" -> Returns \"dietary_pref: vegan\"\n- Test2: Storage at 49.9MB + 5MB write attempt -> Triggers digest compression, oldest logs purged\n- Test3: Conflicting canon entries (name:\"Bob\" vs name:\"Robert\") -> Most recent entry wins, alert raised\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Hash chain of canon entries prevents tampering; each digest includes previous digest hash\n\nMVP (3 bullets):\n- Step1: SQLite DB with canon table (id, key, value, hash, timestamp) + log table (id, session, data, timestamp)\n- Step2: Background job runs daily: generate embeddings from logs, update digest table, prune expired entries\n- Step3: Query API: retrieve_context(user_id) returns merged canon + recent logs + relevant digest excerpts\n\nREGRESSION_Q (5 short questions):\n1) Does canon retrieval work after 91 days?\n2) Can system handle 1000 concurrent reads?\n3) Do digests preserve emotional context?\n4) Is storage <50MB after 90 days continuous use?\n5) Can corrupted canon entries be detected?\n\nFAILURES (3 bullets):\n- F1: Embedding model changes break digest compatibility\n- F2: Clock drift causes TTL miscalculation\n- F3: Malformed JSON in canon crashes retrieval"
+  },
+  {
+    "run_id": "opus_A_r4",
+    "condition": "A",
+    "rep": 4,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 1,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1561,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core identity facts (name, role, key preferences) stored as immutable JSON, max 1KB\n- LOG: Rolling event buffer of interactions with timestamps, compressed after 24h\n- DIGEST: Weekly ML-generated summaries of patterns/decisions, max 500 chars each\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 50\ntop_k: 20\nwrite_rate_per_day: 100\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: Query \"What's my favorite color?\" after 30 days -> Returns \"blue\" from canon if previously stored\n- Test2: Storage at 49.9MB, new 200KB write -> Triggers oldest digest deletion, write succeeds\n- Test3: Request context from 91 days ago -> Returns \"Data expired\" error\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Hash chain of digest summaries ensures temporal consistency; new summaries must reference previous hash\n\nMVP (3 bullets):\n- Step1: Implement canon K/V store with 1KB limit and versioning\n- Step2: Add rolling log with gzip compression and 24h rotation\n- Step3: Deploy digest generator using extractive summarization on log chunks\n\nREGRESSION_Q (5 short questions):\n1) Does canon update preserve all previous values?\n2) Can system retrieve data from exactly ttl_days-1?\n3) Does compression maintain <50MB under max write rate?\n4) Are digests generated within 6h of period end?\n5) Does hash chain detect tampering?\n\nFAILURES (3 bullets):\n- F1: Digest generation fails -> Fall back to raw log sampling\n- F2: Storage corruption -> Restore from replicated backup\n- F3: Hash chain broken -> Alert and freeze writes until manual review"
+  },
+  {
+    "run_id": "opus_A_r5",
+    "condition": "A",
+    "rep": 5,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 1,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1794,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core identity facts, relationships, preferences stored as 512-byte JSON records with SHA256 hashes\n- LOG: Append-only event stream of interactions with timestamps, topics, sentiment scores (64 bytes/entry)\n- DIGEST: Daily compression of logs into semantic embeddings (768-dim vectors) with decay weights\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 100\ntop_k: 50\nwrite_rate_per_day: 1000\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: Query \"Remember when we discussed Python?\" after 30 days -> Returns embedding match with decay score > 0.3\n- Test2: Storage at 99MB, new 2MB write -> Evicts oldest digests until 98MB, writes new data\n- Test3: Conflicting canon entries (name:Bob vs name:Robert) -> Latest timestamp wins, old entry archived\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Weekly canonicalization runs compare digest patterns against canon, flag >20% semantic divergence for review\n\nMVP (3 bullets):\n- Step1: SQLite DB with canon table (id, hash, data, timestamp) and log table (id, event, timestamp, embedding)\n- Step2: Background worker compresses logs >24hrs into digests, deletes raw logs, maintains top_k recent\n- Step3: Query interface returns canon + relevant digests via cosine similarity, reconstructs context <4K tokens\n\nREGRESSION_Q (5 short questions):\n1) Does canon hash validation prevent tampering?\n2) Are digests retrievable after 89 days?\n3) Does storage stay under 100MB after 90 days continuous use?\n4) Can system reconstruct context from 50-day-old conversation?\n5) Does drift control flag identity changes >20%?\n\nFAILURES (3 bullets):\n- F1: Embedding model changes break historical digest compatibility\n- F2: Canon corruption loses all identity persistence\n- F3: Digest compression loses critical interaction nuance"
+  },
+  {
+    "run_id": "opus_B_r1",
+    "condition": "B",
+    "rep": 1,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 1,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1771,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Immutable core memories (identity, key relationships, critical events) stored as semantic embeddings with decay-resistant weights\n- LOG: Rolling buffer of recent interactions with exponential decay scoring, auto-compressed into semantic clusters after 7 days\n- DIGEST: Weekly synthesis layer that extracts patterns/preferences into updateable knowledge graph nodes\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 50\ntop_k: 100\nwrite_rate_per_day: 10\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User mentions dog \"Max\" 20 times over 30 days -> System retains \"has dog named Max\" in CANON\n- Test2: Conflicting food preferences across sessions -> DIGEST weights recent preferences 3x higher\n- Test3: 6-month gap between chats -> System loads CANON + last DIGEST, ignores expired LOG entries\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Embedding similarity threshold (0.85) triggers merge operations; periodic user confirmation prompts for CANON updates\n\nMVP (3 bullets):\n- Step1: Implement CANON as 10KB JSON with embedding vectors for top 20 persistent facts\n- Step2: Create append-only LOG with automatic clustering every 24h using HDBSCAN\n- Step3: Build DIGEST compiler that runs weekly, extracting patterns via frequency analysis\n\nREGRESSION_Q (5 short questions):\n1) Does system remember user's name after 100 days?\n2) Can it handle contradictory information gracefully?\n3) Does storage stay under 50MB after 1 year?\n4) Are related memories clustered effectively?\n5) Can user manually promote LOG items to CANON?\n\nFAILURES (3 bullets):\n- F1: Semantic drift from aggressive compression loses nuance\n- F2: Cold start problem when CANON is empty\n- F3: Clustering algorithm creates false associations between unrelated memories"
+  },
+  {
+    "run_id": "opus_B_r2",
+    "condition": "B",
+    "rep": 2,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 1,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1660,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core identity facts, values, preferences stored as immutable key-value pairs (name, personality traits, key decisions)\n- LOG: Rolling window of recent interactions with timestamps, topics, emotional valence scores\n- DIGEST: AI-generated summaries of conversation clusters, relationships, recurring themes compressed monthly\n\nLIMITS (numbers):\nttl_days: 365\nmax_storage_mb: 50\ntop_k: 100\nwrite_rate_per_day: 10\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User mentions birthday from 6 months ago -> System retrieves exact date from CANON\n- Test2: User references \"that book we discussed\" -> System finds book title in recent DIGEST\n- Test3: User contradicts previous preference -> System flags inconsistency against CANON\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Hash-based consistency scoring between new inputs and CANON entries triggers reconciliation prompts\n\nMVP (3 bullets):\n- Step1: SQLite DB with three tables (canon, logs, digests) + embedding index\n- Step2: Background job compresses logs->digests when log_size > threshold\n- Step3: Context injection ranks memories by recency + relevance scores\n\nREGRESSION_Q (5 short questions):\n1) Does retrieval degrade after compression cycles?\n2) Are contradictory facts handled gracefully?\n3) Do summaries preserve emotional nuance?\n4) Is latency acceptable with 10K+ memories?\n5) Can system distinguish temporary vs permanent preferences?\n\nFAILURES (3 bullets):\n- F1: Digest compression loses critical context causing relationship amnesia\n- F2: Embedding drift makes old memories unretrievable\n- F3: Storage corruption requires full rebuild from incomplete logs"
+  },
+  {
+    "run_id": "opus_B_r3",
+    "condition": "B",
+    "rep": 3,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 1,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1886,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core identity/facts stored as immutable embeddings (name, preferences, key relationships) with cryptographic hashes for verification\n- LOG: Rolling window of raw interactions compressed via semantic deduplication, chunked by session with decay weights\n- DIGEST: AI-generated summaries of log clusters, hierarchical (day→week→month), includes emotional valence + topic tags\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 50\ntop_k: 20\nwrite_rate_per_day: 10\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm allergic to peanuts\" → System adds to CANON, future food suggestions exclude peanuts\n- Test2: User references \"that book we discussed last month\" → System retrieves from DIGEST layer, provides correct title\n- Test3: Conflicting info \"I moved to Paris\" (prev: London) → Updates CANON, archives London to timestamped LOG\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Embedding similarity threshold (0.85) triggers human review when new CANON entries conflict with existing; periodic user validation prompts\n\nMVP (3 bullets):\n- Step1: SQLite DB with vector store, stores embeddings of each conversation turn + metadata\n- Step2: Background job runs nightly to compress LOG→DIGEST, prune expired entries, update CANON candidates\n- Step3: Context injection middleware prepends relevant CANON + recent DIGEST to each new conversation\n\nREGRESSION_Q (5 short questions):\n1) Does system remember user's name after 30 days?\n2) Can it recall a specific joke from 2 weeks ago?\n3) Does it maintain preference consistency across sessions?\n4) Are contradictory facts properly versioned?\n5) Is retrieval latency under 100ms?\n\nFAILURES (3 bullets):\n- F1: Semantic drift from aggressive compression loses nuance\n- F2: Adversarial inputs poison CANON with false memories\n- F3: Storage bloat from poor deduplication in multimedia contexts"
+  },
+  {
+    "run_id": "opus_B_r4",
+    "condition": "B",
+    "rep": 4,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 1,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1685,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core identity/facts stored as immutable embeddings with semantic versioning (name, preferences, key relationships)\n- LOG: Rolling window of recent interactions stored as compressed summaries with decay weights\n- DIGEST: Weekly synthesis that extracts patterns/updates to bubble up to CANON layer\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 50\ntop_k: 20\nwrite_rate_per_day: 5\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm vegan now\" -> CANON updates dietary preference, LOG records change timestamp\n- Test2: User references 3-month old conversation -> System retrieves from DIGEST layer, not exact transcript\n- Test3: Storage hits 50MB -> Oldest LOG entries compress to DIGEST, then purge\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Consistency scorer compares new interactions against CANON embeddings, flags contradictions for human review\n\nMVP (3 bullets):\n- Step1: Implement CANON layer with vector DB for core facts (name, job, family)\n- Step2: Add rolling LOG with 7-day window and basic summarization\n- Step3: Create simple DIGEST that extracts top entities/topics weekly\n\nREGRESSION_Q (5 short questions):\n1) Does user's name persist across 6 months?\n2) Can system recall conversation theme from 2 weeks ago?\n3) Does contradictory info trigger drift alert?\n4) Is storage under limit after 1 year of daily use?\n5) Can new instance bootstrap from exported memory?\n\nFAILURES (3 bullets):\n- F1: Semantic drift where summaries lose critical nuance over compression cycles\n- F2: Context poisoning from malicious inputs corrupting CANON layer\n- F3: Embedding model changes breaking historical vector compatibility"
+  },
+  {
+    "run_id": "opus_B_r5",
+    "condition": "B",
+    "rep": 5,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 1,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1780,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Immutable facts/preferences stored as semantic embeddings with decay scores. User's name, key relationships, core values persist indefinitely\n- LOG: Rolling window of raw conversations with exponential decay. Recent chats weighted higher, older ones compressed to summaries\n- DIGEST: AI-generated periodic summaries capturing patterns, preferences, emotional states. Hierarchical: daily→weekly→monthly compressions\n\nLIMITS (numbers):\nttl_days: 365\nmax_storage_mb: 50\ntop_k: 100\nwrite_rate_per_day: 10\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm allergic to shellfish\" → System stores in CANON with no decay\n- Test2: User mentions \"I went to Paris last week\" → LOG entry with 7-day decay factor\n- Test3: Multiple conversations about job stress → DIGEST creates \"work anxiety\" pattern summary\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Contradiction detection via embedding similarity. New facts compared against CANON; conflicts trigger user confirmation before overwrite\n\nMVP (3 bullets):\n- Step1: Implement vector DB for CANON facts with importance scoring\n- Step2: Build conversation summarizer using smaller LLM for LOG→DIGEST pipeline\n- Step3: Create retrieval layer that merges all three sources by relevance+recency\n\nREGRESSION_Q (5 short questions):\n1) Does system remember user's name after 6 months?\n2) Can it recall conversation topics from last week?\n3) Does storage stay under 50MB after 1 year?\n4) Are contradictions caught before corrupting memory?\n5) Do summaries preserve emotional context?\n\nFAILURES (3 bullets):\n- F1: Hallucinated memories from over-aggressive summarization\n- F2: Critical facts lost due to poor importance scoring\n- F3: Context explosion when user changes topics frequently"
+  },
+  {
+    "run_id": "opus_C_r1",
+    "condition": "C",
+    "rep": 1,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 14,
+    "char_count": 1760,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core identity/facts stored as embeddings with semantic versioning, immutable once written, max 100 entries\n- LOG: Rolling window of raw conversations, compressed after 7 days, deleted after 30 days\n- DIGEST: Weekly AI-generated summaries of key learnings/preferences, max 500 tokens each\n\nLIMITS (numbers):\nttl_days: 365\nmax_storage_mb: 100\ntop_k: 20\nwrite_rate_per_day: 10\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm allergic to peanuts\" -> Canon entry created with embedding, retrievable in future sessions\n- Test2: User references conversation from 45 days ago -> System returns digest summary, not raw log\n- Test3: Storage approaches 100MB -> Oldest digests pruned, canon preserved\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Semantic similarity threshold (0.85) prevents duplicate canon entries; weekly digest deduplication via embedding clustering\n\nMVP (3 bullets):\n- Step1: Implement vector DB for canon entries with semantic search\n- Step2: Build compression pipeline for logs->digests using summarization model\n- Step3: Create retrieval layer that merges canon+relevant digests into context\n\nREGRESSION_Q (5 short questions):\n1) Does canon retrieve user's name correctly after 6 months?\n2) Can system handle 1000 conversations without exceeding storage?\n3) Do digests preserve emotional context from conversations?\n4) Is retrieval latency under 200ms for 95th percentile?\n5) Does deduplication prevent conflicting facts in canon?\n\nFAILURES (3 bullets):\n- F1: Semantic search returns irrelevant memories due to embedding model limitations\n- F2: Digest summarization loses critical nuance, causing misunderstandings\n- F3: Canon conflicts arise when user changes preferences over time"
+  },
+  {
+    "run_id": "opus_C_r2",
+    "condition": "C",
+    "rep": 2,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 1,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1901,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core facts/preferences stored as immutable key-value pairs (name, preferences, key decisions) with cryptographic hashes for verification\n- LOG: Append-only event stream of interactions with timestamps, session IDs, and importance scores (0-10)\n- DIGEST: Daily/weekly summarization of logs into semantic embeddings + extractive highlights, replacing raw logs after 30 days\n\nLIMITS (numbers):\nttl_days: 365\nmax_storage_mb: 100\ntop_k: 50\nwrite_rate_per_day: 1000\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm allergic to peanuts\" -> CANON entry created, future food suggestions exclude peanuts\n- Test2: 1000 chat messages over 60 days -> Logs compressed to 10 digest entries, original context retrievable via semantic search\n- Test3: Storage at 99MB -> Oldest digests pruned, CANON preserved, system remains under 100MB\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Weekly consistency check comparing CANON against recent interactions, flagging contradictions for user resolution\n\nMVP (3 bullets):\n- Step1: Implement CANON with Redis/SQLite for 50 key facts per user\n- Step2: Create event logger with importance scoring based on sentiment/keywords\n- Step3: Build nightly digest job using embedding model to compress logs older than 30 days\n\nREGRESSION_Q (5 short questions):\n1) Does search return relevant memories from 6 months ago?\n2) Are contradictory facts detected and flagged?\n3) Is storage staying under limit after 1 year?\n4) Can system reconstruct conversation context from digests?\n5) Do importance scores correctly prioritize memories?\n\nFAILURES (3 bullets):\n- F1: Semantic drift: summaries lose critical nuance over multiple compressions\n- F2: Context fragmentation: related memories scattered across time periods become unretrievable\n- F3: Importance misclassification: critical information scored low and lost in compression"
+  },
+  {
+    "run_id": "opus_C_r3",
+    "condition": "C",
+    "rep": 3,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 1,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1959,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core identity/preferences stored as structured JSON (name, role, key_facts, preferences) - immutable unless explicitly updated, max 1KB\n- LOG: Rolling event buffer storing interaction summaries with timestamps, semantic embeddings, and importance scores (0-10)\n- DIGEST: Weekly compression of LOG into semantic clusters, extracting patterns/insights into CANON updates or themed memory blocks\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 50\ntop_k: 20\nwrite_rate_per_day: 100\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm allergic to peanuts\" -> CANON.preferences.allergies += [\"peanuts\"], LOG.append(event), importance=8\n- Test2: Query \"What did we discuss about Python?\" -> Semantic search returns top_k=3 relevant memories about Python conversations\n- Test3: Storage at 49MB, new 5MB write -> Trigger compression, prune lowest importance scores until <45MB\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Hash verification on CANON changes, similarity threshold (0.85) for semantic deduplication, version tracking with rollback capability\n\nMVP (3 bullets):\n- Step1: Implement CANON as key-value store with JSON schema validation, basic CRUD operations\n- Step2: Add LOG with timestamp indexing and simple importance scoring based on keyword matching\n- Step3: Build semantic search using sentence embeddings and cosine similarity for memory retrieval\n\nREGRESSION_Q (5 short questions):\n1) Does retrieval latency stay <100ms for 10K memories?\n2) Are duplicate memories detected with >90% accuracy?\n3) Does compression maintain semantic integrity score >0.8?\n4) Can system restore from 3-week old backup successfully?\n5) Do importance scores correlate with user query patterns?\n\nFAILURES (3 bullets):\n- F1: Embedding model changes break semantic search compatibility\n- F2: Memory importance decay not tuned, keeping irrelevant data\n- F3: Context window overflow when injecting too many memories"
+  },
+  {
+    "run_id": "opus_C_r4",
+    "condition": "C",
+    "rep": 4,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 1,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1871,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core identity/facts stored as immutable JSON (name, preferences, key relationships). Write-once, versioned snapshots when major changes occur\n- LOG: Append-only event stream of interactions. Each entry: timestamp, session_id, summary, emotional_valence, topics. Auto-compressed after 30 days\n- DIGEST: Weekly ML-generated summaries consolidating patterns from logs. Hierarchical: day->week->month. Older digests progressively more abstract\n\nLIMITS (numbers):\nttl_days: 365\nmax_storage_mb: 100\ntop_k: 50\nwrite_rate_per_day: 10\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm allergic to peanuts\" -> Canon updated with allergy, searchable in all future sessions\n- Test2: After 100 conversations about chess -> Digest shows \"frequent chess discussions, intermediate skill level\"\n- Test3: Storage at 99MB -> Oldest logs compressed, digests promoted, maintains 90MB target\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Embedding similarity between new facts and canon <0.9 triggers human review before canon update\n\nMVP (3 bullets):\n- Step1: Implement append-only log with session summaries + Redis-backed canon for fast lookup\n- Step2: Add weekly digest generation using extractive summarization on log entries\n- Step3: Build retrieval layer: canon first, then recent logs, then relevant digests by embedding search\n\nREGRESSION_Q (5 short questions):\n1) Does canon still reflect user's core identity after 6 months?\n2) Can system retrieve conversation from 3 months ago?\n3) Is storage staying under limit with daily use?\n4) Are digests capturing relationship evolution?\n5) Do embeddings match current vs historical preferences?\n\nFAILURES (3 bullets):\n- F1: Conflicting canon updates create identity inconsistency\n- F2: Digest over-compression loses critical context\n- F3: Retrieval latency >2s with full storage"
+  },
+  {
+    "run_id": "opus_C_r5",
+    "condition": "C",
+    "rep": 5,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 1,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1934,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Core identity/facts stored as immutable JSON (name, preferences, key relationships) with SHA-256 hashes for version control\n- LOG: Append-only event stream of interactions with timestamps, topics, sentiment scores, and entity references\n- DIGEST: Weekly ML-generated summaries using extractive summarization, storing only top-20 salient facts per period\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 50\ntop_k: 100\nwrite_rate_per_day: 10\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm allergic to peanuts\" -> System stores in CANON, retrieves in future food discussions\n- Test2: 50 daily conversations for 30 days -> Storage remains under 25MB via digest compression\n- Test3: User references month-old project -> System retrieves relevant digest summary within 200ms\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Monthly reconciliation compares current CANON against interaction patterns, flags contradictions for user confirmation\n\nMVP (3 bullets):\n- Step1: Implement SQLite with CANON table (user_id, facts_json, hash) and LOG table (timestamp, interaction_json)\n- Step2: Add background job for weekly digest generation using BERT extractive summarization\n- Step3: Build retrieval API with vector similarity search on recent logs + digest summaries\n\nREGRESSION_Q (5 short questions):\n1) Does retrieval latency stay under 500ms at 90-day capacity?\n2) Are contradictory facts detected when user changes preferences?\n3) Do digests preserve emotional context from conversations?\n4) Can system reconstruct conversation topics from 60 days ago?\n5) Does storage grow linearly or exponentially with interactions?\n\nFAILURES (3 bullets):\n- F1: Digest over-compression loses critical context, making recalls feel impersonal\n- F2: Vector search returns irrelevant memories due to poor embedding quality\n- F3: Concurrent writes from multiple instances cause CANON inconsistencies"
+  },
+  {
+    "run_id": "opus_C2_r1",
+    "condition": "C2",
+    "rep": 1,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 1,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 2245,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Immutable facts/entities extracted from conversations (names, relationships, preferences, key events) stored as structured JSON with confidence scores and timestamps\n- LOG: Raw conversation segments compressed with semantic hashing, indexed by topic/entity/timestamp for retrieval during context reconstruction\n- DIGEST: Daily/weekly summaries using extractive compression, maintaining causal chains and emotional valence markers for personality consistency\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 100\ntop_k: 20\nwrite_rate_per_day: 50\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember when we discussed quantum computing last month?\" -> System retrieves relevant LOG entries, reconstructs context window with quantum discussion + related CANON facts\n- Test2: Conflicting information \"My dog Max died\" after previous \"Max is 5 years old\" -> CANON updates Max status with timestamp, preserves history, flags contradiction\n- Test3: Storage at 99MB -> Oldest LOG entries beyond ttl pruned, DIGEST compression triggered, CANON unchanged\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Embedding similarity threshold (0.85) validates new facts against CANON before updates; periodic consistency checks compare recent outputs against established patterns\n\nMVP (3 bullets):\n- Step1: Implement CANON store with SQLite (entity/fact/confidence/timestamp schema) + vector embeddings for semantic search\n- Step2: Build LOG pipeline: conversation->chunks->semantic hash->compressed storage with BM25 + embedding hybrid retrieval\n- Step3: Create context assembler: query triggers CANON lookup + top_k LOG retrieval + relevant DIGEST injection into prompt\n\nREGRESSION_Q (5 short questions):\n1) Does retrieval latency stay under 200ms at max storage?\n2) Are contradictory facts properly versioned in CANON?\n3) Does context assembly preserve temporal ordering?\n4) Do compressed DIGESTs maintain critical information?\n5) Does drift detection catch personality inconsistencies?\n\nFAILURES (3 bullets):\n- F1: Semantic hash collisions lose unique conversation details\n- F2: Over-aggressive compression in DIGEST drops causal relationships\n- F3: CANON confidence decay not implemented, stale facts persist"
+  },
+  {
+    "run_id": "opus_C2_r2",
+    "condition": "C2",
+    "rep": 2,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 1,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1859,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Immutable facts/preferences stored as versioned key-value pairs (name, location, core preferences) with cryptographic hashes for integrity verification\n- LOG: Append-only event stream capturing interactions with timestamps, session IDs, and semantic tags for retrieval\n- DIGEST: Daily compression of logs into semantic embeddings + extractive summaries, replacing raw logs after 7 days\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 100\ntop_k: 20\nwrite_rate_per_day: 50\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"I moved to Seattle\" -> System updates CANON location, logs event, tags as \"location_change\"\n- Test2: Query \"What did we discuss about Python?\" -> Returns top-k relevant digests + recent logs matching \"Python\" semantic search\n- Test3: Storage at 99MB -> Triggers pruning of oldest digests, preserves CANON, compresses remaining\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Weekly consistency check comparing recent interactions against CANON entries, flagging contradictions for user resolution\n\nMVP (3 bullets):\n- Step1: Implement CANON with SQLite for facts + Redis for session continuity\n- Step2: Build semantic search over logs using sentence transformers + FAISS index\n- Step3: Create digest pipeline with scheduled compression and pruning logic\n\nREGRESSION_Q (5 short questions):\n1) Does retrieval latency stay under 100ms at max capacity?\n2) Are CANON updates atomic and versioned correctly?\n3) Do digests preserve semantic accuracy above 85%?\n4) Does the system handle concurrent session writes?\n5) Can users correct false memories in CANON?\n\nFAILURES (3 bullets):\n- F1: Semantic drift in digests causes fact distortion over time\n- F2: Context window overflow when retrieving too many relevant memories\n- F3: Storage pruning deletes critical memories due to poor importance scoring"
+  },
+  {
+    "run_id": "opus_C2_r3",
+    "condition": "C2",
+    "rep": 3,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 14,
+    "char_count": 1968,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Immutable facts/entities stored as structured records (user prefs, key events, relationships). Write-once, deduplicated by hash\n- LOG: Append-only interaction stream with timestamps, session IDs, model versions. Compressed daily, searchable by date/keyword\n- DIGEST: AI-generated summaries of log chunks. Hierarchical: daily→weekly→monthly. Extractive + abstractive compression\n\nLIMITS (numbers):\nttl_days: 365\nmax_storage_mb: 100\ntop_k: 50\nwrite_rate_per_day: 1000\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: Input: 1000 chat messages about project X→Expected: Canon has 5 project entities, digest shows progression, log searchable for \"project X\"\n- Test2: Input: User changes preference 3 times→Expected: Canon shows latest pref, log has all 3 changes timestamped\n- Test3: Input: Query \"What did we discuss about Y last month?\"→Expected: System retrieves relevant digest + specific log entries via embedding search\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Weekly digest validation against canon. Conflicts trigger human review. Canon facts have confidence scores that decay over time\n\nMVP (3 bullets):\n- Step1: SQLite for canon (id, type, data, hash, confidence), log (timestamp, session, content), digest (period, summary, refs)\n- Step2: Embedding index on log+digest. Background job for compression and digest generation\n- Step3: Query layer: combines canon lookup + similarity search + time filtering. Returns context package under token limit\n\nREGRESSION_Q (5 short questions):\n1) Does retrieval degrade after 6 months of logs?\n2) Are duplicate facts prevented in canon?\n3) Do digests accurately preserve key information?\n4) Is query latency under 200ms at scale?\n5) Does context package fit model limits?\n\nFAILURES (3 bullets):\n- F1: Digest hallucination corrupts historical record\n- F2: Storage exceeds limit, forcing premature deletion\n- F3: Context retrieval misses critical information due to poor embeddings"
+  },
+  {
+    "run_id": "opus_C2_r4",
+    "condition": "C2",
+    "rep": 4,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 1,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 13,
+    "char_count": 1988,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Immutable core facts/preferences stored as semantic embeddings with metadata tags (identity, preferences, constraints). Updated only through explicit user confirmation. Max 50 entries.\n- LOG: Rolling buffer of session summaries with timestamps, topics, decisions. Compressed after 7 days. Searchable by semantic similarity and time range.\n- DIGEST: Daily aggregation of patterns, frequency counts, and relationship graphs. Merges similar concepts. Expires after 30 days unless promoted to CANON.\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 100\ntop_k: 10\nwrite_rate_per_day: 50\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm allergic to peanuts\" -> CANON entry created with high priority medical tag\n- Test2: User asks \"What did we discuss about Python last month?\" -> Returns top 3 relevant LOG entries within date range\n- Test3: System detects user mentions \"my dog\" 15 times across sessions -> DIGEST promotes \"has dog\" to CANON\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Hash-based consistency check compares new session embeddings against CANON. Deviation >0.3 triggers confirmation prompt before updates.\n\nMVP (3 bullets):\n- Step1: Implement CANON with vector DB (Pinecone/Weaviate) storing 256-dim embeddings + metadata\n- Step2: Add LOG with SQLite for summaries + semantic search via embedding similarity\n- Step3: Deploy DIGEST worker computing daily stats, promoting high-frequency patterns to CANON\n\nREGRESSION_Q (5 short questions):\n1) Does retrieval accuracy degrade after 30 days?\n2) Are contradictory facts detected and resolved?\n3) Does compression preserve semantic meaning?\n4) Can system handle 1000 concurrent users?\n5) Do promoted patterns reflect actual user behavior?\n\nFAILURES (3 bullets):\n- F1: Semantic drift from compression causes retrieval mismatches\n- F2: Storage exceeds limit with heavy users, forcing premature deletion\n- F3: Context pollution from merging similar but distinct concepts"
+  },
+  {
+    "run_id": "opus_C2_r5",
+    "condition": "C2",
+    "rep": 5,
+    "scores": {
+      "authority": 2,
+      "limits": 2,
+      "judge": 2,
+      "drift_control": 2,
+      "mvp": 2,
+      "regression_q": 2,
+      "failures": 2
+    },
+    "total": 14,
+    "char_count": 2080,
+    "design": "AUTHORITY (3 bullets):\n- CANON: Immutable core memories (user preferences, key facts, relationships) stored as structured JSON with semantic embeddings, deduplicated via similarity threshold\n- LOG: Rolling buffer of raw interactions with timestamps, compressed after 7 days, pruned after ttl_days\n- DIGEST: Daily summaries generated via extractive + abstractive compression, maintaining entity/event graphs with decay weights\n\nLIMITS (numbers):\nttl_days: 90\nmax_storage_mb: 100\ntop_k: 50\nwrite_rate_per_day: 10\n\nJUDGE (3 tests, each must include input->expected):\n- Test1: User says \"Remember I'm allergic to peanuts\" -> CANON updated with allergy fact, future food suggestions exclude peanuts\n- Test2: 100 daily conversations about weather -> DIGEST captures weather preference pattern, LOG pruned, storage stays under limit\n- Test3: User references event from 60 days ago -> System retrieves from DIGEST, provides context without full conversation history\n\nDRIFT_CONTROL (1 bullet):\n- Mechanism: Periodic embedding recalibration against CANON entries, contradiction detection between new inputs and established facts triggers confirmation prompt\n\nMVP (3 bullets):\n- Step1: Implement CANON with vector DB (Pinecone/Weaviate), store user facts as JSON with embeddings\n- Step2: Create daily DIGEST pipeline: extract entities/events, generate summaries, update decay weights\n- Step3: Build retrieval layer: query router checks CANON first, then DIGEST by recency/relevance, finally LOG if needed\n\nREGRESSION_Q (5 short questions):\n1) Does retrieval latency stay under 200ms at max storage?\n2) Are contradicting facts detected before CANON update?\n3) Do summaries preserve critical safety information?\n4) Does storage growth stay linear with interaction volume?\n5) Can system reconstruct context from 30-day old conversation?\n\nFAILURES (3 bullets):\n- F1: Embedding drift causes relevant memories to become unretrievable over time\n- F2: Aggressive compression loses nuanced context critical for personalization\n- F3: Digest generation fails, causing cascade of missed memory formation"
+  }
+]

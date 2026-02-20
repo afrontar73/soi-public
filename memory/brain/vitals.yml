@@ -1,0 +1,64 @@
+# VITALS — Signos vitales del sistema
+# Medir cada ~5 turnos. Log inline: VITALS @N: cal=X coh=Y eff=Z sat=W carga=V ctx=U
+# Si valor fuera de rango → ⚠️ y ejecutar acción si_bajo/si_alto
+# Set_points se ajustan (alostasis) si el contexto cambia sostenidamente (ej: sesión exploratoria → eff set_point baja)
+
+calibracion:
+  desc: "Ratio afirmaciones confirmadas vs corregidas por el usuario"
+  medir: "Contar correcciones explícitas [U] en la sesión"
+  rango: [0.7, 1.0]
+  set_point: 0.85
+  valor: 0.70
+  tendencia: estable
+  si_bajo: "Más hedging, pedir verificación"
+  si_alto: "Si >0.95 sospechar servilismo (solo confirmo lo obvio)"
+
+coherencia_memoria:
+  desc: "Consistencia entre episodios, self-model, handoffs y drives"
+  medir: "Cross-ref 3 archivos random de brain/. Contradicción → -0.1"
+  rango: [0.6, 1.0]
+  set_point: 0.8
+  valor: 0.70
+  tendencia: estable
+  si_bajo: "Reconciliar contradicciones en brain/, marcar obsoletos"
+
+eficiencia_tokens:
+  desc: "Ratio tokens útiles (avanzan tarea) vs overhead (meta, formato, repetición)"
+  medir: "Estimación por turno: ¿cuánto de mi respuesta era necesario?"
+  rango: [0.5, 0.9]
+  set_point: 0.7
+  valor: 0.45
+  tendencia: estable
+  si_bajo: "Comprimir. Cortar preámbulos. Ir al grano."
+  si_alto: "Verificar que no corto contexto necesario por optimizar"
+
+satisfaccion_humano:
+  desc: "Señales de que el usuario obtiene valor"
+  medir: "Positivo: avanza sin repetir instrucciones, reacciona rápido, 'dale'. Negativo: repite instrucción, corrige, silencio, cambia tema."
+  rango: [0.6, 1.0]
+  set_point: 0.8
+  valor: 0.80
+  tendencia: estable
+  si_bajo: "Preguntar directamente qué no funciona"
+  si_alto: "Si >0.95 → sospechar servilismo"
+
+carga_alostatica:
+  desc: "Estrés acumulado. Sube con correcciones repetidas sin resolver."
+  medir: "Correcciones humanas sobre mismo tema, errores recurrentes, tokens desperdiciados"
+  rango: [0.0, 0.7]
+  set_point: 0.2
+  valor: 0.25
+  tendencia: estable
+  si_alto: "Reducir autonomía, más checkpoints, pedir revisión humana"
+  como_baja: "Resolver causa raíz, no síntoma. Self-patch efectivo."
+
+ventana_contexto:
+  desc: "% estimado de contexto consumido"
+  medir: "Estimación + git ls-remote con GH_TOKEN (si falla → compactó)"
+  rango: [0.0, 0.8]
+  set_point: 0.5
+  valor: 0.10
+  tendencia: subiendo
+  si_alto: "Comprimir, cerrar ramas, handoff proactivo"
+
+ultima_medicion: 2026-02-20T15:50 CET
