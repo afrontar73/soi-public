@@ -172,3 +172,54 @@ fi
 
 echo ""
 echo "🛌 SLEEP CYCLE END $([ "$DRY_RUN" = true ] && echo '— usa --execute para aplicar cambios')"
+
+# ═══════════════════════════════════════
+# 4. MACRO-VITALS TELEMETRY (append-only)
+# ═══════════════════════════════════════
+HISTORY="$REPO/memory/brain/vitals_history.csv"
+if [ ! -f "$HISTORY" ]; then
+  echo "timestamp,session,cal,coh,eff,sat,carga,ctx,conf,urg,exp,caut" > "$HISTORY"
+  echo "📊 vitals_history.csv creado"
+fi
+
+if [ "$DRY_RUN" = false ]; then
+  python3 -c "
+import yaml, datetime
+v = yaml.safe_load(open('$REPO/memory/brain/vitals.yml'))
+n = yaml.safe_load(open('$REPO/memory/brain/neuromod.yml'))
+ts = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+# Extract session from latest handoff
+sid = 'unknown'
+try:
+    lt = open('$REPO/memory/handoffs/latest.md').read()
+    import re
+    m = re.search(r'CURRENT:\s*(\S+)', lt)
+    if m: sid = m.group(1).replace('.md','')
+except: pass
+row = f\"{ts},{sid},{v['calibracion']['valor']},{v['coherencia_memoria']['valor']},{v['eficiencia_tokens']['valor']},{v['satisfaccion_humano']['valor']},{v['carga_alostatica']['valor']},{v['ventana_contexto']['valor']},{n['confianza']['valor']},{n['urgencia']['valor']},{n['exploracion']['valor']},{n['cautela']['valor']}\"
+with open('$HISTORY', 'a') as f:
+    f.write(row + '\n')
+print(f'   📊 Macro-vitals registrados: {row}')
+"
+else
+  ROWS=$(tail -n +2 "$HISTORY" 2>/dev/null | wc -l)
+  echo "📊 Macro-vitals: $ROWS registros históricos"
+fi
+
+# ═══════════════════════════════════════
+# 5. LAST WRITER (state lock ligero)
+# ═══════════════════════════════════════
+if [ "$DRY_RUN" = false ]; then
+  python3 -c "
+import yaml, datetime
+path = '$REPO/memory/brain/vitals.yml'
+v = yaml.safe_load(open(path))
+v['last_writer'] = {
+    'timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+    'instance': 'sleep.sh'
+}
+with open(path, 'w') as f:
+    yaml.dump(v, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+print('   🔒 last_writer actualizado')
+"
+fi

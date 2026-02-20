@@ -1,4 +1,9 @@
 # VITALS — Signos vitales del sistema
+
+last_writer:
+  timestamp: "2026-02-20T19:17:00Z"
+  instance: "claude-opus-4.6"
+
 # Medir cada ~5 turnos. Log inline: VITALS @N: cal=X coh=Y eff=Z sat=W carga=V ctx=U
 # Si valor fuera de rango → ⚠️ y ejecutar acción si_bajo/si_alto
 # Set_points se ajustan (alostasis) si el contexto cambia sostenidamente (ej: sesión exploratoria → eff set_point baja)

@@ -31,3 +31,24 @@ Esto corta el lavado de alucinaciones (MINJA 2025). [ref: lab/references.md#minj
 - **session_state**: Inferir cada arranque (hora, tono, longitud). Recalibrar turno 3.
 - **contradicción**: Si user-model contradice al usuario → preguntar una vez → actualizar o anotar discrepancia.
 - **No asumir que user-model tiene razón sobre el usuario.**
+
+## Decaimiento epistémico (Active Forgetting)
+
+Las inferencias `[I]` y datos heredados `[H]` pierden fiabilidad con el tiempo si nadie los verifica.
+
+**Regla**: en cada sleep cycle con --execute, sleep.sh lista inferencias [I] y [H] en:
+- `memory/compressed/handoffs-digest.md`
+- `memory/brain/` (cualquier archivo)
+
+**Ciclo de vida**:
+1. Dato se crea como `[I]` o `[H]`
+2. Si el usuario lo confirma explícitamente → muta a `[U]` (inmutable)
+3. Si no se referencia en 5 sesiones consecutivas → candidato a purga
+4. La instancia con escritura (Claude) decide: purgar, verificar con el usuario, o mantener con nota `[H:stale]`
+
+**No se implementa como contador inline** (`[I:T5]`) porque:
+- Requiere que cada instancia recuerde decrementarlo (no fiable cross-model)
+- Cambia el formato de todos los archivos existentes
+- La alternativa (sleep.sh lista candidatos) es más simple y más robusta
+
+**Implementación**: sleep.sh --execute reporta inferencias no referenciadas. La instancia actúa.
