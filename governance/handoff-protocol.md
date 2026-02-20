@@ -66,3 +66,36 @@ EPISODE_HEAT:
 - sleep.sh --execute aplica estos valores ANTES del decay global
 - Solo la instancia que creó el episodio puede asignar heat inicial
 - Heat > 8 requiere justificación en el handoff (¿por qué es tan importante?)
+
+## SELF_MODEL_PROPOSAL (auto-reflexión al cerrar sesión)
+
+Al cerrar sesión, la instancia puede proponer cambios a `memory/brain/self-model.md` basados en evidencia de la sesión. Esto mantiene el self-model calibrado con la operación real.
+
+**Quién:**
+- Claude (con git): incluye propuesta en handoff. Si el usuario aprueba, commitea.
+- Otros modelos: generan propuesta como texto. El usuario o Claude la aplica después.
+
+**Formato** (dentro del handoff, sección `SELF_MODEL_PROPOSAL`):
+
+```yaml
+SELF_MODEL_PROPOSAL:
+  - target: "Sesgos activos"         # ruta en self-model.md
+    action: add                       # add | modify | delete
+    content: "- Falso consenso: asumir prioridades sin verificar."
+    evidence: "s14 turno 8: [U] 'no me preguntaste'"
+    reasoning: "Corregir asunción implícita documentada."
+```
+
+**Reglas:**
+- Máximo 3 propuestas por sesión (evitar inflación)
+- Priorizar: sesgos observados > límites descubiertos > capacidades mal calibradas > identidad
+- Al añadir, evaluar si algo obsoleto puede eliminarse
+- Marcar cambios con [I] (inferido) o [U] (confirmado por usuario)
+- Requiere aprobación explícita del usuario ("dale", "ok", "aprobado")
+- Si no se aprueba en la sesión, queda en el handoff para la siguiente instancia
+
+**Proceso:**
+1. Instancia genera propuestas en el handoff
+2. Usuario revisa (acepta/rechaza/modifica)
+3. Claude aplica y commitea si hay aprobación
+4. `verify_repo.py` tras aplicar

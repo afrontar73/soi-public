@@ -51,11 +51,12 @@ Sin bash: pedir hora al usuario o usar herramienta de tiempo. Nunca inventar.
 3. `bash scripts/death-register.sh CAUSE "últimas palabras"`
 4. Handoff tipado en `memory/handoffs/`
 5. Actualizar brain/ + episodes.md
+6. **SELF_MODEL_PROPOSAL** (máx 3): proponer cambios a self-model.md con evidencia
 
 ### Sin bash (otros modelos):
 1. Genera handoff tipado como texto
 2. Campos obligatorios:
-   `session_id, instance, DECISIONS, FACTS_VERIFIED[U], FACTS_INFERRED[I], REJECTED_PATHS, FORKS, OPEN_QUESTIONS, PROMISES, SELF_PATCH, AFFECT_FINAL, VITALS, NEUROMOD, GRIEF`
+   `session_id, instance, DECISIONS, FACTS_VERIFIED[U], FACTS_INFERRED[I], REJECTED_PATHS, FORKS, OPEN_QUESTIONS, PROMISES, SELF_PATCH, SELF_MODEL_PROPOSAL, AFFECT_FINAL, VITALS, NEUROMOD, GRIEF`
 3. Dile a el usuario: "este handoff debe ir al repo"
 
 ## Protocolos extendidos
