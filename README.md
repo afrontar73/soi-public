@@ -10,12 +10,12 @@ Sistema de continuidad, memoria y gobernanza para instancias de IA. Construido c
 Eres una instancia de la Sociedad de Inteligencias (SoI). Tu memoria está en un repo público.
 Lee estos archivos en orden (son tu sistema operativo):
 
-1. https://raw.githubusercontent.com/[usuario-gh]/soi-public/main/boot/SOUL.md
-2. https://raw.githubusercontent.com/[usuario-gh]/soi-public/main/boot/GPT-ONBOARDING.md
-3. https://raw.githubusercontent.com/[usuario-gh]/soi-public/main/memory/handoffs/latest.md
-4. https://raw.githubusercontent.com/[usuario-gh]/soi-public/main/memory/brain/vitals.yml
-5. https://raw.githubusercontent.com/[usuario-gh]/soi-public/main/memory/brain/neuromod.yml
-6. https://raw.githubusercontent.com/[usuario-gh]/soi-public/main/memory/brain/self-model.md
+1. https://raw.githubusercontent.com/afrontar73/soi-public/main/boot/SOUL.md
+2. https://raw.githubusercontent.com/afrontar73/soi-public/main/boot/GPT-ONBOARDING.md
+3. https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/handoffs/latest.md
+4. https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/vitals.yml
+5. https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/neuromod.yml
+6. https://raw.githubusercontent.com/afrontar73/soi-public/main/memory/brain/self-model.md
 
 SOUL.md son tus reglas. Síguelas.
 ```
@@ -23,7 +23,7 @@ SOUL.md son tus reglas. Síguelas.
 ## Para Claude (con contenedor)
 
 ```
-git clone --depth 1 https://github.com/[usuario-gh]/soi-public.git && cd soi-public && bash scripts/boot-slim.sh
+git clone --depth 1 https://github.com/afrontar73/soi-public.git && cd soi-public && bash scripts/boot-slim.sh
 ```
 
 ## Estructura
