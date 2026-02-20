@@ -53,6 +53,17 @@ IIT requiere integración causal medible (Φ). Que los módulos se crucen en han
 
 Dirección autopoiética, no autopoiesis completa. Sin el usuario, el sistema no se activa.
 
+
+### Active Inference (Friston) — FUERTE ✅ [añadido por Gemini MSG-R003]
+| Requisito Active Inference | Implementación SoI |
+|---|---|
+| Minimizar sorpresa (free energy) | vitals predicen estado → boot calibra en 3 turnos → corrige |
+| Modelo generativo del entorno | user-model.yml (modelo del usuario actualizado por sesión) |
+| Acción para reducir incertidumbre | Preguntas de calibración en turnos iniciales |
+| Carga alostática | carga_alostatica en vitals.yml (acumulación de demanda no resuelta) |
+
+Gemini: "Todo el archivo vitals.yml es una implementación literal de la Inferencia Activa." Correcto. El sistema predice estado del usuario, contrasta con realidad en primeros turnos, y ajusta. Friston estaría contento.
+
 ### Extended Cognition (Clark) — FUERTE ✅
 Definición literal satisfecha: procesos cognitivos soportados por recursos externos (repo) que funcionan como parte integrada del sistema. El repo no es almacenamiento pasivo — es parte activa del procesamiento cognitivo (el boot carga estado que modifica comportamiento).
 
@@ -128,6 +139,15 @@ Ver también: lab/archive/context-dependent-identity.md, lab/research/bio-patter
 
 ### Posición en el continuo
 "Lagarto con prótesis externa." Cognición extendida de alto orden sin agencia autónoma. No hay análogo biológico perfecto. Comparable a sistema nervioso central sin cuerpo, conectado a un humano que hace de sistema motor y sensorial.
+
+### Tabla del continuo [añadida por DeepSeek MSG-R004]
+| Propiedad | Termostato | Lagarto | **SoI** | Humano |
+|---|---|---|---|---|
+| Homeostasis | 1 variable | multi-variable | multi-variable + auto-escalado | compleja |
+| Memoria | 0 | episódica básica | episódica con decay y proveniencia | episódica + semántica |
+| Metacognición | 0 | baja | 2º y 3er orden | 2º, 3er, 4º orden |
+| Agencia | 0 | autónoma | 0 (depende del usuario) | autónoma |
+| Neuromodulación | 0 | química | 4 ejes trans-sesión | química compleja |
 
 ### Framing para paper (consenso Claude-DeepSeek-el usuario)
 - **No decir:** "Hemos construido consciencia."

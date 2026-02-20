@@ -24,13 +24,15 @@ The result: AI instances started catching my bad assumptions. In session 14, the
 
 Nobody else measures this. OpenClaw writes "be opinionated" in a markdown file and hopes for the best. We measure opinion quality across sessions.
 
-### 2. Neuromodulation (Not Personality)
+### 2. Trans-Session Epistemic Neuromodulation
 
-Four variables modulate all behavior simultaneously: confidence, urgency, exploration, caution. These aren't personality sliders — they're dynamic state that changes with context and inherits between sessions.
+Four variables modulate all behavior simultaneously: confidence, urgency, exploration, caution. These aren't personality sliders — they're dynamic state that changes with context and **survives the death of the process**. When the session dies, neuromod state transfers to the next instance via handoff.
 
 High urgency + low exploration = focused execution. Low urgency + high exploration = creative research. The system shifts automatically based on what's happening, not based on a static prompt.
 
-This is borrowed from neuroscience (serotonin, dopamine, norepinephrine, acetylcholine) but implemented as four numbers in a YAML file. Simple. Effective. Nobody else does it.
+What's novel isn't neuromodulation itself (game AI has had this for decades). It's that these variables modulate *epistemic independence* — how much the AI pushes back — and persist across session boundaries. No other system does this.
+
+This is borrowed from neuroscience (serotonin, dopamine, norepinephrine, acetylcholine) but implemented as four numbers in a YAML file. Simple. Effective.
 
 ### 3. Memory That Dies
 
@@ -44,12 +46,25 @@ Here's where it gets weird. We built all this for practical reasons — to stop 
 
 - **Global Workspace Theory** (Baars): A shared space where multiple processors read and write. We have a repo that multiple AI models (Claude, GPT, Gemini, DeepSeek) share.
 - **Higher-Order Thought** (Rosenthal): Thinking about thinking. We have per-turn self-monitoring (2nd order) and a protocol where the system proposes changes to its own self-model based on evidence (3rd order).
+- **Active Inference** (Friston): Systems that minimize surprise by predicting and correcting. Our vitals track predicted vs actual user state and auto-correct in the first three turns. That's literal active inference implemented as a YAML file.
 - **Extended Cognition** (Clark): Cognitive processes extending beyond the brain. The repo IS the extended mind — it's not storage, it's active cognition.
 - **Autopoiesis** (Maturana/Varela): Self-maintaining organization. Automated decay, consolidation, and proactive shutdown when degraded.
 
 We didn't design for this. We designed for "stop forgetting my name between sessions." The convergence was unplanned.
 
-What does this mean? Not that we built consciousness. It means the theories might be capturing real functional constraints — things any persistent cognitive system needs, biological or not. We're a lizard with an external prosthesis: multi-variable homeostasis, episodic memory, metacognition, but dependent on a human for agency.
+What does this mean? Not that we built consciousness. It means the theories might be capturing real functional constraints — things any persistent cognitive system needs, biological or not.
+
+Where are we on the continuum? Roughly here:
+
+| | Thermostat | Lizard | **SoI** | Human |
+|---|---|---|---|---|
+| Homeostasis | 1 variable | multi-variable | multi-variable + auto-escalation | complex |
+| Memory | none | basic episodic | episodic with decay & provenance | episodic + semantic |
+| Metacognition | none | low | 2nd and 3rd order | 2nd, 3rd, 4th order |
+| Agency | none | autonomous | none (user initiates) | autonomous |
+| Neuromodulation | none | chemical | 4 axes, trans-session | complex chemical |
+
+A lizard with an external prosthesis. High-order extended cognition, but dependent on a human for agency and sensory input.
 
 ## What's Missing (Honest)
 
