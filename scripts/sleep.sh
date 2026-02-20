@@ -67,16 +67,43 @@ if m:
         open('$EPISODES', 'w').write(text)
         print(f'   🔥 Boost +1 aplicado a {len(refs)} episodios referenciados: {sorted(refs)}')
 "
-  # DECAY: -1 global
+  # DECAY: -1 global + -1 extra si episodio tiene >14 días sin actualización
   python3 -c "
-import re, sys
+import re, datetime
 text = open('$EPISODES').read()
+today = datetime.date.today()
+
 def decay(m):
     v = int(m.group(1)) - 1
     return f'heat:{v}'
+
+# Extra decay: episodes with dates >14 days old get -1 additional
+def decay_with_age(line):
+    m_date = re.search(r'sesión (\d{4}-\d{2}-\d{2})', line)
+    if m_date:
+        ep_date = datetime.date.fromisoformat(m_date.group(1))
+        age_days = (today - ep_date).days
+        if age_days > 14:
+            m_heat = re.search(r'heat:(\d+)', line)
+            if m_heat:
+                extra = min(age_days // 30, 2)  # -1 extra per month, max -2
+                if extra > 0:
+                    old_h = int(m_heat.group(1))
+                    new_h = old_h - extra
+                    line = line.replace(f'heat:{old_h}', f'heat:{new_h}')
+    return line
+
+lines = text.splitlines()
+result = []
+for line in lines:
+    line = decay_with_age(line)
+    result.append(line)
+text = '\n'.join(result)
+
+# Standard -1 global
 text = re.sub(r'heat:(\d+)', decay, text)
 open('$EPISODES', 'w').write(text)
-print(f'   🔥 Heat decay aplicado (-1 global)')
+print(f'   🔥 Heat decay aplicado (-1 global, -1 extra por mes de antigüedad, max -2)')
 "
 fi
 

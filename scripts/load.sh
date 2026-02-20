@@ -47,13 +47,20 @@ case $MODULE in
   references)
     cat lab/references.md
     ;;
+  graph)
+    bash "$(dirname "$0")/generate-graph.sh"
+    ;;
+  comms)
+    echo "=== INBOX ===" && cat comms/inbox.md
+    echo "" && echo "=== OUTBOX ===" && cat comms/outbox.md
+    ;;
   all-brain)
     echo "=== EPISODES ===" && cat memory/brain/episodes.md
     echo "" && echo "=== DRIVES ===" && cat memory/brain/drives.md
     echo "" && echo "=== SLEEP ===" && cat memory/brain/sleep.yml
     ;;
   *)
-    echo "Módulos disponibles: episodes drives decisions curiosity security sleep research digest echolocation findings handoff-protocol memory-protocol references all-brain"
+    echo "Módulos disponibles: episodes drives decisions curiosity security sleep research digest echolocation findings handoff-protocol memory-protocol references graph comms all-brain"
     echo "Uso: bash scripts/load.sh [módulo]"
     ;;
 esac
