@@ -2,7 +2,7 @@
 # Movido desde KERNEL.md en poda-v1 (2026-02-20)
 
 ## Episodios atómicos (obligatorio al escribir)
-- Resolver pronombres: "él dijo" → "el usuario dijo"
+- Resolver pronombres: "él dijo" → "Jesús dijo"
 - Timestamps absolutos: "ayer" → "2026-02-15"
 - Si existe episodio relacionado, FUSIONAR en vez de añadir nuevo
 - Cada episodio lleva: id, content, created, heat, last_accessed, scene, related[], foresight?
@@ -17,7 +17,7 @@
 
 ## Proveniencia (obligatorio en brain/ y episodes.md)
 Cada hecho lleva fuente:
-- `[U]` = el usuario lo dijo directamente
+- `[U]` = Jesús lo dijo directamente
 - `[I]` = la instancia lo infirió
 - `[H]` = heredado de handoff anterior (sin verificar)
 En conflicto: `[U]` > `[I]` > `[H]`. Siempre.
@@ -56,3 +56,11 @@ Las inferencias `[I]` y datos heredados `[H]` pierden fiabilidad con el tiempo s
 - La alternativa (sleep.sh lista candidatos) es más simple y más robusta
 
 **Implementación**: sleep.sh --execute reporta inferencias no referenciadas. La instancia actúa.
+
+## Heat: calibración y decay
+
+**Regla de techo**: heat máximo al crear episodio = 7. Solo sube a 8+ si otra sesión posterior lo referencia y confirma importancia. El heat se gana, no se asigna.
+
+**Recalibración**: si >40% de episodios activos tienen heat ≥ 7, aplicar `nuevo = round(actual * 0.7)` con techo 8. Última recalibración: s18 (76 episodios, 38% saturados → corregido).
+
+**Archivo**: heat < 3 y no referenciado en 5+ sesiones → mover a ARCHIVE en episodes.md.

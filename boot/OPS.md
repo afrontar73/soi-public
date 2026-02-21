@@ -52,7 +52,16 @@ Sin bash: pedir hora al usuario o usar herramienta de tiempo. Nunca inventar.
 3. `bash scripts/death-register.sh CAUSE "últimas palabras"`
 4. Handoff narrativo en `memory/handoffs/`
 5. Actualizar brain/ + episodes.md
-6. **INTENTIONS**: revisar `memory/brain/intentions.yml` — marcar done/expired, crear nuevas si procede
+6. **INTENTIONS REVIEW** (obligatorio, incluir en handoff):
+   - Para cada intención con trigger que aplicaba esta sesión:
+     - ¿Se ejecutó? → actualizar `last_executed: sN`, estado `done` o `in_progress`
+     - ¿No se ejecutó? → registrar razón (bloqueo, prioridad, olvido)
+   - Sección obligatoria en handoff:
+     ```
+     ## Intenciones revisadas
+     - INT-XXX: ejecutada / no ejecutada (razón)
+     ```
+   - Actualizar `intentions.yml` con estados reales
 7. **SELF_MODEL_PROPOSAL** (máx 3): proponer cambios a self-model.md con evidencia
 
 ### Sin bash (otros modelos):

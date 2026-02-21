@@ -3,8 +3,12 @@
 # Formato: cada intención tiene trigger (cuándo), acción (qué), contexto (por qué)
 # Tipos de trigger: temporal (sesión N, fecha X), contextual (si pasa Y), permanente (siempre)
 
-# Estado: pending | done | expired | cancelled
+# Estado: pending | in_progress | blocked | done | expired | cancelled
 # Prioridad: critical | high | medium | low
+# Campos opcionales:
+#   last_executed: sesión donde se ejecutó por última vez (para permanentes)
+#   blocked_by: qué lo bloquea (para blocked)
+#   expires: sesión o fecha tras la cual marcar expired si no se resuelve
 
 intentions:
 
@@ -17,7 +21,7 @@ intentions:
     action: "Generar primer resumen semanal de episodios como prueba de concepto"
     context: "La compresión jerárquica necesita un caso de prueba real"
     priority: medium
-    status: pending
+    status: done
 
   - id: INT-002
     created: 2026-02-21
@@ -28,7 +32,8 @@ intentions:
     action: "Extraer métricas reales de las 15+ sesiones: ratios confirmación/corrección, evolución neuromod, distribución de heat, reducción tokens boot"
     context: "DeepSeek R004 y Gemini R003 insisten: sin datos el paper es filosofía, no ciencia"
     priority: high
-    status: pending
+    status: in_progress
+    last_executed: s18
 
   - id: INT-003
     created: 2026-02-21
@@ -39,7 +44,10 @@ intentions:
     action: "Integrar feedback en priorización de gaps y ajustar implementación"
     context: "MSG-O015 enviado, pendiente respuesta"
     priority: high
-    status: pending
+    status: blocked
+    blocked_by: "Gemini no ha respondido a MSG-O015. DS ya revisó."
+    expires: s22
+    note: "Si Gemini no responde para s22, marcar done con solo feedback DS"
 
   - id: INT-004
     created: 2026-02-21
@@ -50,6 +58,7 @@ intentions:
     action: "Revisar intentions.yml y actualizar estados (done/expired)"
     priority: critical
     status: pending
+    last_executed: s17
 
   - id: INT-005
     created: 2026-02-21
@@ -72,3 +81,18 @@ intentions:
     context: "GAP 6 propuesto por DeepSeek: bucle de validación de hipótesis. Conecta consolidación (GAP 1) con prospectiva (GAP 2)."
     priority: high
     status: pending
+    last_executed: never
+    note: "Consolidación ocurrió en s16 pero INT-006 no se ejecutó entonces. Ejecutar ahora si hay consolidación."
+
+  - id: INT-007
+    created: 2026-02-21
+    created_by: "[I] Claude-Opus s16 review"
+    trigger:
+      type: permanent
+      condition: "Cada interacción significativa con nodo externo (DeepSeek, Gemini, GPT)"
+    action: "Actualizar who-knows-what.yml: reliability scores, last_evidence, añadir dominios nuevos si procede"
+    context: "Sin esto, who-knows-what.yml se queda estático y pierde valor"
+    priority: high
+    status: pending
+    last_executed: never
+    note: "DS interactuando en s18 — ejecutar al cierre"
