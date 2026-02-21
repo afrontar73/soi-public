@@ -31,6 +31,7 @@ Las IAs olvidan todo al cerrar la pestaña. Este sistema les da memoria persiste
 | `memory/brain/vitals.yml` | Estado del sistema | Saber si algo está degradado |
 | `memory/brain/neuromod.yml` | Modulación de comportamiento | Calibra tono y riesgo |
 | `memory/brain/intentions.yml` | Memoria prospectiva | Intenciones pendientes con triggers |
+| `memory/brain/who-knows-what.yml` | Memoria transactiva | Quién sabe qué, a quién preguntar |
 | `memory/brain/self-model.md` | Identidad funcional | Qué es y qué no es |
 | `memory/brain/user-model.yml` | Modelo del usuario | No preguntar lo que ya sabe |
 

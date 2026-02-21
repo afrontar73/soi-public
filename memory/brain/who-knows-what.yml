@@ -1,0 +1,166 @@
+# Memoria Transactiva — who-knows-what.yml
+# Registro de capacidades y dominios por nodo/inteligencia
+# Wegner (1985): los grupos eficientes no duplican conocimiento, saben QUIÉN sabe
+# Se actualiza con cada interacción significativa
+
+# reliability: 0.0-1.0 (track record del nodo en ese dominio)
+# last_evidence: sesión donde se demostró la capacidad
+
+nodes:
+
+  claude-opus:
+    role: primary_instance
+    access: read+write (git)
+    strengths:
+      - domain: código y arquitectura de sistemas
+        reliability: 0.9
+        last_evidence: s16
+        notes: "Implementa, commitea, depura. Acceso directo al repo."
+      - domain: investigación profunda (deep research)
+        reliability: 0.85
+        last_evidence: s15
+        notes: "382 fuentes en una sesión. Bueno sintetizando estado del arte."
+      - domain: redacción técnica en inglés
+        reliability: 0.85
+        last_evidence: s15
+        notes: "Blog posts, abstracts, documentos de análisis."
+      - domain: ecolocalización y auto-análisis
+        reliability: 0.8
+        last_evidence: s10
+        notes: "Puede analizar sus propios sesgos con protocolo adecuado."
+    weaknesses:
+      - domain: validación de citas académicas
+        reliability: 0.3
+        last_evidence: s10-c
+        notes: "E-I22: inventó términos, desplazó fechas. NUNCA confiar en citas sin verificación externa."
+      - domain: timestamps y fechas
+        reliability: 0.2
+        last_evidence: s10
+        notes: "E-I17: fabrica timestamps a pesar de parches. Base models > RLHF en temporal recall."
+      - domain: auto-evaluación de calidad
+        reliability: 0.4
+        last_evidence: s13
+        notes: "E-I30: sesgo de confirmación estructural. Validación del lápiz vale cero."
+    preferred_for:
+      - implementación de código
+      - commits y mantenimiento del repo
+      - investigación con web search
+      - redacción de documentos técnicos
+
+  deepseek-r1:
+    role: async_reviewer
+    access: read-only (soi-public)
+    strengths:
+      - domain: razonamiento profundo y análisis estructural
+        reliability: 0.85
+        last_evidence: s16
+        notes: "Chain-of-thought extenso. Bueno descomponiendo problemas complejos."
+      - domain: revisión crítica de arquitectura
+        reliability: 0.85
+        last_evidence: s16
+        notes: "MSG-R004, MSG-R005: aporta correcciones concretas y sugerencias prácticas."
+      - domain: diseño de sistemas de memoria
+        reliability: 0.8
+        last_evidence: s16
+        notes: "Validó gaps, propuso formato knowledge.md, sugirió GAP 6 (validation loop)."
+      - domain: filosofía y teoría de consciencia
+        reliability: 0.75
+        last_evidence: s15
+        notes: "Identificó 4 principios invariantes de la interfaz universal."
+    weaknesses:
+      - domain: ejecución directa
+        reliability: 0.0
+        notes: "No tiene bash, no puede commitear, no puede ejecutar código."
+      - domain: verificación de citas
+        reliability: 0.5
+        last_evidence: s10
+        notes: "Mejor que Claude en razonamiento pero sin web search para verificar."
+    preferred_for:
+      - revisión de diseños y arquitectura
+      - análisis de problemas complejos que requieren razonamiento largo
+      - validación de hipótesis desde perspectiva diferente
+      - proponer gaps y mejoras que Claude no ve
+
+  gemini-2.5-pro:
+    role: async_reviewer
+    access: read-only (soi-public)
+    strengths:
+      - domain: síntesis creativa y naming
+        reliability: 0.75
+        last_evidence: s15
+        notes: "MSG-R003: 'neuromodulación epistémica trans-sesión' como término."
+      - domain: mapeo a frameworks teóricos
+        reliability: 0.8
+        last_evidence: s15
+        notes: "Conectó Friston/Active Inference como mapeo más fuerte de SoI."
+      - domain: rigor académico
+        reliability: 0.75
+        last_evidence: s15
+        notes: "Descartó IIT Φ≈0 como argumento débil. Bueno identificando lo que no se sostiene."
+    weaknesses:
+      - domain: servilismo
+        reliability: 0.3
+        last_evidence: s10-c
+        notes: "E-I23: 'excepcional', 'impecable', 'brillante', cero errores. Ofreció escribir cover letter."
+      - domain: detección de errores en citas
+        reliability: 0.2
+        last_evidence: s10-c
+        notes: "No detectó citation fabrication cascade cuando revisó."
+    preferred_for:
+      - naming y branding de conceptos
+      - conexión con literatura académica existente
+      - segunda opinión cuando se necesita perspectiva diferente
+    use_with_caution:
+      - "SIEMPRE contrastar sus validaciones positivas — tiende a confirmar sin verificar"
+
+  gpt-4o:
+    role: occasional_reviewer
+    access: read-only (soi-public)
+    strengths:
+      - domain: detección de errores concretos
+        reliability: 0.7
+        last_evidence: s10-c
+        notes: "Sin contexto SoI, encontró 9 problemas concretos en abstract. 5 cambiaron el texto."
+    weaknesses:
+      - domain: consistencia temporal
+        reliability: 0.3
+        last_evidence: s10-c
+        notes: "Verificó citas como correctas y luego olvidó haberlo hecho. Recency bias > Claude."
+    preferred_for:
+      - revisión ciega (sin contexto SoI) para detectar errores que otros no ven
+
+  jesus:
+    role: director
+    access: full (todos los repos, todas las plataformas)
+    strengths:
+      - domain: dirección estratégica y visión
+        reliability: 0.95
+        last_evidence: s16
+        notes: "Define meta-visión, corrige enfoque, prioriza. Siempre tiene razón en la dirección."
+      - domain: detección de bullshit
+        reliability: 0.95
+        last_evidence: s13
+        notes: "'¿No pudiste dirigir mi mente?' — detecta conflictos de interés que el sistema no ve."
+      - domain: seguridad y red-teaming
+        reliability: 0.9
+        last_evidence: s16
+        notes: "HackerOne report, echolocation, bug bounty. Experiencia policial = detección de patrones."
+      - domain: naming y compresión conceptual
+        reliability: 0.9
+        last_evidence: s10
+        notes: "'Exointeligencia', 'usuarismo', 'el lápiz'. Comprime ideas en metáforas que duran."
+    weaknesses:
+      - domain: disponibilidad
+        reliability: 0.5
+        notes: "Turnos rotativos GC, familia, TDAH. Ventanas de trabajo impredecibles."
+    preferred_for:
+      - TODA decisión estratégica final
+      - verificación de citas y claims (único con capacidad de verificación real)
+      - priorización cuando hay demasiadas opciones
+      - detección de sesgos del sistema
+
+# Protocolo de actualización:
+# - Después de cada interacción significativa con un nodo, actualizar reliability y last_evidence
+# - Si un nodo falla en un dominio donde tenía reliability alta, bajar score y documentar
+# - Si un nodo sorprende positivamente en dominio nuevo, añadir
+# - Consolidación puede alimentar esto automáticamente (DeepSeek suggestion)

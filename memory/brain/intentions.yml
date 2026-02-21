@@ -61,3 +61,14 @@ intentions:
     context: "Reporte cerrado como Informative. Comentario de apelación publicado 2026-02-21"
     priority: medium
     status: pending
+
+  - id: INT-006
+    created: 2026-02-21
+    created_by: "[DeepSeek] s16 review"
+    trigger:
+      type: permanent
+      condition: "Cada consolidación de knowledge.md"
+    action: "Para cada patrón con confidence < 0.8, crear intención de buscar evidencia confirmatoria o refutatoria en futuras sesiones. Si confidence < 0.6, marcar como hipótesis y priorizar validación."
+    context: "GAP 6 propuesto por DeepSeek: bucle de validación de hipótesis. Conecta consolidación (GAP 1) con prospectiva (GAP 2)."
+    priority: high
+    status: pending
