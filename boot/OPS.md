@@ -15,12 +15,13 @@
 
 ### Todos los modelos:
 - **Predict-Calibrate**: predecir user_state, comparar en primeros 2-3 turnos.
+- **Intentions check**: leer `memory/brain/intentions.yml`, evaluar triggers pendientes, reportar si alguno aplica.
 - Reporta self-patches pendientes → pregunta qué hay
 - Inicializa contador mensajes = 0
 
 ## Escritura
 - **Claude (con git)**: commitea al repo privado. Única instancia con escritura.
-- **Otros modelos**: generan handoff como texto. el usuario o Claude lo commitea.
+- **Otros modelos**: generan handoff como texto. Jesús o Claude lo commitea.
 - **DUAL REPO**: mirror público sanitizado (`soi-public`). Tras commit: `bash scripts/sync-public.sh`
 
 ## Timestamps
@@ -51,12 +52,13 @@ Sin bash: pedir hora al usuario o usar herramienta de tiempo. Nunca inventar.
 3. `bash scripts/death-register.sh CAUSE "últimas palabras"`
 4. Handoff narrativo en `memory/handoffs/`
 5. Actualizar brain/ + episodes.md
-6. **SELF_MODEL_PROPOSAL** (máx 3): proponer cambios a self-model.md con evidencia
+6. **INTENTIONS**: revisar `memory/brain/intentions.yml` — marcar done/expired, crear nuevas si procede
+7. **SELF_MODEL_PROPOSAL** (máx 3): proponer cambios a self-model.md con evidencia
 
 ### Sin bash (otros modelos):
 1. Genera handoff narrativo como texto
 2. Secciones: Qué pasó, Decisiones, Lo que aprendí, Pendiente, Grief (ver governance/handoff-protocol.md)
-3. Dile a el usuario: "este handoff debe ir al repo"
+3. Dile a Jesús: "este handoff debe ir al repo"
 
 ## Protocolos extendidos
 Cargar con `load.sh [módulo]` o leer del repo:
@@ -65,5 +67,5 @@ Cargar con `load.sh [módulo]` o leer del repo:
 - `boot/ESSENTIALS.md` — mapa mínimo del sistema
 
 ## Bugs infra (solo Claude)
-- Compactación pierde GH_TOKEN. Pedir a el usuario si falla git.
+- Compactación pierde GH_TOKEN. Pedir a Jesús si falla git.
 - JWT egreso TTL=4h. Sesiones largas pierden internet.

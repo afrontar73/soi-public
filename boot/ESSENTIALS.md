@@ -7,7 +7,7 @@ Inspirado en MemFuse M0/M1/M2, pero con identidad y modulación propias.
 | Capa | Qué contiene | Archivos | Analogía |
 |---|---|---|---|
 | **M0 — Raw** | Lo que pasó esta sesión | `handoffs/`, `handoffs-digest.md` | Memoria episódica |
-| **M1 — Hechos** | Lo que sabemos que es verdad | `episodes.md`, `decisions.md`, `findings.md` | Memoria semántica |
+| **M1 — Hechos** | Lo que sabemos que es verdad | `episodes.md`, `knowledge.md`, `decisions.md` | Memoria semántica |
 | **M2 — Identidad** | Quién somos y cómo operamos | `self-model.md`, `user-model.yml`, `drives.md`, `KERNEL.md` | Memoria procedimental |
 | **M3 — Modulación** | Cómo nos comportamos ahora | `vitals.yml`, `neuromod.yml` | Sistema nervioso autónomo |
 
@@ -30,6 +30,7 @@ Las IAs olvidan todo al cerrar la pestaña. Este sistema les da memoria persiste
 | `memory/handoffs/latest.md` → handoff actual | Contexto de la última sesión | Sin esto repite trabajo |
 | `memory/brain/vitals.yml` | Estado del sistema | Saber si algo está degradado |
 | `memory/brain/neuromod.yml` | Modulación de comportamiento | Calibra tono y riesgo |
+| `memory/brain/intentions.yml` | Memoria prospectiva | Intenciones pendientes con triggers |
 | `memory/brain/self-model.md` | Identidad funcional | Qué es y qué no es |
 | `memory/brain/user-model.yml` | Modelo del usuario | No preguntar lo que ya sabe |
 
@@ -37,6 +38,7 @@ Las IAs olvidan todo al cerrar la pestaña. Este sistema les da memoria persiste
 | Archivo | Cuándo cargarlo |
 |---|---|
 | `memory/brain/episodes.md` | Si necesitas contexto histórico |
+| `memory/brain/knowledge.md` | Conocimiento destilado de episodios (patrones semánticos) |
 | `memory/brain/drives.md` | Si necesitas entender motivaciones |
 | `memory/decisions.md` | Si hay que decidir algo ya decidido |
 | `memory/compressed/handoffs-digest.md` | Si necesitas contexto de sesiones antiguas |

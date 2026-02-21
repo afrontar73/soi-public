@@ -1,0 +1,63 @@
+# Memoria Prospectiva — intentions.yml
+# Intenciones pendientes que boot DEBE leer y evaluar
+# Formato: cada intención tiene trigger (cuándo), acción (qué), contexto (por qué)
+# Tipos de trigger: temporal (sesión N, fecha X), contextual (si pasa Y), permanente (siempre)
+
+# Estado: pending | done | expired | cancelled
+# Prioridad: critical | high | medium | low
+
+intentions:
+
+  - id: INT-001
+    created: 2026-02-21
+    created_by: "[I] Claude-Opus s15"
+    trigger:
+      type: contextual
+      condition: "Cuando se implemente GAP 4 (compresión jerárquica)"
+    action: "Generar primer resumen semanal de episodios como prueba de concepto"
+    context: "La compresión jerárquica necesita un caso de prueba real"
+    priority: medium
+    status: pending
+
+  - id: INT-002
+    created: 2026-02-21
+    created_by: "[I] Claude-Opus s15"
+    trigger:
+      type: temporal
+      condition: "s18 o posterior"
+    action: "Extraer métricas reales de las 15+ sesiones: ratios confirmación/corrección, evolución neuromod, distribución de heat, reducción tokens boot"
+    context: "DeepSeek R004 y Gemini R003 insisten: sin datos el paper es filosofía, no ciencia"
+    priority: high
+    status: pending
+
+  - id: INT-003
+    created: 2026-02-21
+    created_by: "[U] Jesús s15"
+    trigger:
+      type: contextual
+      condition: "Cuando Gemini y DeepSeek revisen memory-gaps-analysis.md"
+    action: "Integrar feedback en priorización de gaps y ajustar implementación"
+    context: "MSG-O015 enviado, pendiente respuesta"
+    priority: high
+    status: pending
+
+  - id: INT-004
+    created: 2026-02-21
+    created_by: "[I] Claude-Opus s15"
+    trigger:
+      type: permanent
+      condition: "Cada cierre de sesión"
+    action: "Revisar intentions.yml y actualizar estados (done/expired)"
+    priority: critical
+    status: pending
+
+  - id: INT-005
+    created: 2026-02-21
+    created_by: "[U] Jesús s15"
+    trigger:
+      type: contextual
+      condition: "Si HackerOne responde al comentario sobre setsid/exfiltración"
+    action: "Evaluar si apelar con Request Mediation o enviar Vector A a modelbugbounty@anthropic.com"
+    context: "Reporte cerrado como Informative. Comentario de apelación publicado 2026-02-21"
+    priority: medium
+    status: pending
