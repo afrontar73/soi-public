@@ -69,3 +69,9 @@ Cargar con `load.sh [módulo]` o leer del repo:
 ## Bugs infra (solo Claude)
 - Compactación pierde GH_TOKEN. Pedir a Jesús si falla git.
 - JWT egreso TTL=4h. Sesiones largas pierden internet.
+
+## Compresión semanal (cada domingo o cada 5 sesiones)
+- Revisar episodios y handoffs de la semana
+- Generar `memory/compressed/weekly/week-YYYY-WNN.md`
+- Formato: tema dominante, movimientos clave, patrones, números, lo que sobrevive
+- Referenciar knowledge.md patterns donde aplique
