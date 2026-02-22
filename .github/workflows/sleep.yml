@@ -1,0 +1,60 @@
+# Sleep cycle automático — corre tras cada cierre de sesión
+name: 🛌 Sleep
+
+on:
+  push:
+    paths:
+      - 'memory/handoffs/**'
+    branches:
+      - main
+
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  sleep:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install pyyaml
+
+      - name: Run sleep cycle
+        run: |
+          chmod +x scripts/sleep.sh
+          bash scripts/sleep.sh --execute
+
+      - name: Compute neuromod
+        run: |
+          chmod +x scripts/compute-neuromod.sh
+          bash scripts/compute-neuromod.sh 5
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "=== Changes ==="
+            git diff --stat
+          fi
+
+      - name: Commit changes
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "SoI Sleep"
+          git config user.email "soi-sleep@noreply.github.com"
+          git add -A
+          git commit -m "🛌 sleep: auto post-sesión (decay + boost + neuromod + archive)"
+          git push
