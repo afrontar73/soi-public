@@ -199,8 +199,13 @@ else:
 HEATEOF
 
 echo ""
+echo "🧠 Calculando neuromod desde datos objetivos..."
+bash "$REPO_ROOT/scripts/compute-neuromod.sh" 5
+
+echo ""
 echo "Revisa antes de commit:"
 echo "  - $PRIORITIES"
 echo "  - $NEUROMOD_SUGGESTED"
 echo "  - $VALIDATION (tareas de validación → promover a intentions.yml si procede)"
 echo "  - $KNOWLEDGE (append si hay patrones nuevos)"
+echo "  - memory/brain/neuromod-computed.yml (valores objetivos)"

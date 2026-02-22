@@ -26,15 +26,17 @@ cat memory/brain/neuromod.yml
 
 echo ""
 echo "========== DIRECTIVAS CONDUCTUALES (auto-generadas desde neuromod) =========="
-python3 << 'PYEOF'
+if [ -f memory/brain/neuromod-computed.yml ]; then
+  echo "(fuente: neuromod-computed.yml — basado en git log, no opinión)"
+  python3 << 'PYEOF'
 import yaml
 try:
-    with open("memory/brain/neuromod.yml") as f:
+    with open("memory/brain/neuromod-computed.yml") as f:
         nm = yaml.safe_load(f)
-    c = nm["confianza"]["valor"]
-    u = nm["urgencia"]["valor"]
-    e = nm["exploracion"]["valor"]
-    ca = nm["cautela"]["valor"]
+    c = nm["confidence"]["valor"]
+    u = nm["urgency"]["valor"]
+    e = nm["exploration"]["valor"]
+    ca = nm["caution"]["valor"]
     print(f"Estado: conf={c} urg={u} exp={e} caut={ca}")
     print("Instrucciones para esta sesión:")
     # Confianza
@@ -58,6 +60,9 @@ try:
 except Exception as ex:
     print(f"(neuromod parse error: {ex})")
 PYEOF
+else
+  echo "(neuromod-computed.yml no existe — ejecuta: bash scripts/compute-neuromod.sh)"
+fi
 
 echo ""
 echo "========== CONSOLIDACIÓN (auto-generado) =========="
