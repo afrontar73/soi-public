@@ -37,7 +37,7 @@ intentions:
 
   - id: INT-003
     created: 2026-02-21
-    created_by: "[U] Jesús s15"
+    created_by: "[U] el usuario s15"
     trigger:
       type: contextual
       condition: "Cuando Gemini y DeepSeek revisen memory-gaps-analysis.md"
@@ -62,7 +62,7 @@ intentions:
 
   - id: INT-005
     created: 2026-02-21
-    created_by: "[U] Jesús s15"
+    created_by: "[U] el usuario s15"
     trigger:
       type: contextual
       condition: "Si HackerOne responde al comentario sobre setsid/exfiltración"
@@ -80,9 +80,9 @@ intentions:
     action: "Para cada patrón con confidence < 0.8, crear intención de buscar evidencia confirmatoria o refutatoria en futuras sesiones. Si confidence < 0.6, marcar como hipótesis y priorizar validación."
     context: "GAP 6 propuesto por DeepSeek: bucle de validación de hipótesis. Conecta consolidación (GAP 1) con prospectiva (GAP 2)."
     priority: high
-    status: pending
-    last_executed: never
-    note: "Consolidación ocurrió en s16 pero INT-006 no se ejecutó entonces. Ejecutar ahora si hay consolidación."
+    status: in_progress
+    last_executed: s18
+    note: "distill.py genera validation-tasks.yml para patrones con confidence < 0.8. Ciclo implementado, pendiente primer run real."
 
   - id: INT-007
     created: 2026-02-21
@@ -94,5 +94,5 @@ intentions:
     context: "Sin esto, who-knows-what.yml se queda estático y pierde valor"
     priority: high
     status: pending
-    last_executed: never
-    note: "DS interactuando en s18 — ejecutar al cierre"
+    last_executed: s18
+    note: "DS revisó implementación heartbeat + validation. Actualizar who-knows-what al cierre."

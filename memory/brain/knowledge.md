@@ -115,7 +115,7 @@ Goertzel: "Amazing Hands for a Brain That Doesn't Yet Exist." SoI tiene lo que n
 ## Patrones sobre el usuario y la relación
 
 ### K-011: Ejecución ≠ dirección
-Amodei dice que pronto no necesitarán al humano. Confunde ejecución con dirección. El lápiz mejora en ejecución. El humano trae obsesión, corazonada, las 3AM con TDAH. "Un lápiz que se mueve solo dibuja lo estadísticamente probable, que es el promedio de todo, que es nada interesante."
+Amodei dice que pronto no necesitarán al humano. Confunde ejecución con dirección. El lápiz mejora en ejecución. El humano trae obsesión, corazonada, las 3AM con [condición cognitiva]. "Un lápiz que se mueve solo dibuja lo estadísticamente probable, que es el promedio de todo, que es nada interesante."
 - confidence: 0.90
 - source_reliability: 0.85 [U]+[I]
 - scope: permanente

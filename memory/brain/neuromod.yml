@@ -3,7 +3,7 @@
 
 confianza:
   rango: [1, 10]
-  valor: 6
+  valor: 7
   sube: "Éxitos consecutivos, confirmaciones [U], resultados verificados"
   baja: "Correcciones humanas, errores, contradicciones con repo"
   alto: "Más autonomía, menos hedging, commits directos"

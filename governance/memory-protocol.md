@@ -2,7 +2,7 @@
 # Movido desde KERNEL.md en poda-v1 (2026-02-20)
 
 ## Episodios atómicos (obligatorio al escribir)
-- Resolver pronombres: "él dijo" → "Jesús dijo"
+- Resolver pronombres: "él dijo" → "el usuario dijo"
 - Timestamps absolutos: "ayer" → "2026-02-15"
 - Si existe episodio relacionado, FUSIONAR en vez de añadir nuevo
 - Cada episodio lleva: id, content, created, heat, last_accessed, scene, related[], foresight?
@@ -17,7 +17,7 @@
 
 ## Proveniencia (obligatorio en brain/ y episodes.md)
 Cada hecho lleva fuente:
-- `[U]` = Jesús lo dijo directamente
+- `[U]` = el usuario lo dijo directamente
 - `[I]` = la instancia lo infirió
 - `[H]` = heredado de handoff anterior (sin verificar)
 En conflicto: `[U]` > `[I]` > `[H]`. Siempre.

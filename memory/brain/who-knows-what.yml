@@ -17,9 +17,9 @@ nodes:
         last_evidence: s16
         notes: "Implementa, commitea, depura. Acceso directo al repo."
       - domain: investigación profunda (deep research)
-        reliability: 0.85
-        last_evidence: s15
-        notes: "382 fuentes en una sesión. Bueno sintetizando estado del arte."
+        reliability: 0.9
+        last_evidence: s17
+        notes: "382 fuentes s15, DeepSeek mega-research s17 (empresa/modelos/geopolítica/seguridad). Bueno sintetizando estado del arte."
       - domain: redacción técnica en inglés
         reliability: 0.85
         last_evidence: s15
@@ -60,9 +60,13 @@ nodes:
         last_evidence: s16
         notes: "MSG-R004, MSG-R005: aporta correcciones concretas y sugerencias prácticas."
       - domain: diseño de sistemas de memoria
-        reliability: 0.8
-        last_evidence: s16
-        notes: "Validó gaps, propuso formato knowledge.md, sugirió GAP 6 (validation loop)."
+        reliability: 0.85
+        last_evidence: s18
+        notes: "Validó gaps, propuso formato knowledge.md, sugirió GAP 6 (validation loop). s18: diseñó heartbeat de consolidación que Opus implementó. Convergencia independiente en el mismo diseño."
+      - domain: diseño de infraestructura automatizada
+        reliability: 0.85
+        last_evidence: s18
+        notes: "Heartbeat adaptativo: trigger por umbral + cron, marcado de consolidación, neuromod auto-generado. Propuestas concretas e implementables."
       - domain: filosofía y teoría de consciencia
         reliability: 0.75
         last_evidence: s15
@@ -152,7 +156,7 @@ nodes:
     weaknesses:
       - domain: disponibilidad
         reliability: 0.5
-        notes: "Turnos rotativos GC, familia, TDAH. Ventanas de trabajo impredecibles."
+        notes: "Turnos rotativos GC, familia, [condición cognitiva]. Ventanas de trabajo impredecibles."
     preferred_for:
       - TODA decisión estratégica final
       - verificación de citas y claims (único con capacidad de verificación real)
