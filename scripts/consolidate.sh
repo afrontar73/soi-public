@@ -10,6 +10,7 @@ KNOWLEDGE="$REPO_ROOT/memory/brain/knowledge.md"
 STATE="$REPO_ROOT/memory/brain/consolidation-state.json"
 PRIORITIES="$REPO_ROOT/memory/brain/priorities.yml"
 NEUROMOD_SUGGESTED="$REPO_ROOT/memory/brain/neuromod-suggested.yml"
+VALIDATION="$REPO_ROOT/memory/brain/validation-tasks.yml"
 DISTILL_SCRIPT="$REPO_ROOT/scripts/distill.py"
 
 # Defaults
@@ -128,7 +129,8 @@ python3 "$DISTILL_SCRIPT" \
   --total-new "$NEW" \
   --priorities-out "$PRIORITIES" \
   --neuromod-out "$NEUROMOD_SUGGESTED" \
-  --knowledge-out "$KNOWLEDGE"
+  --knowledge-out "$KNOWLEDGE" \
+  --validation-out "$VALIDATION"
 
 if [[ $? -ne 0 ]]; then
   echo "❌ Error en destilación."
@@ -158,4 +160,5 @@ echo ""
 echo "Revisa antes de commit:"
 echo "  - $PRIORITIES"
 echo "  - $NEUROMOD_SUGGESTED"
+echo "  - $VALIDATION (tareas de validación → promover a intentions.yml si procede)"
 echo "  - $KNOWLEDGE (append si hay patrones nuevos)"
