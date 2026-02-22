@@ -25,6 +25,41 @@ echo "========== NEUROMOD =========="
 cat memory/brain/neuromod.yml
 
 echo ""
+echo "========== DIRECTIVAS CONDUCTUALES (auto-generadas desde neuromod) =========="
+python3 << 'PYEOF'
+import yaml
+try:
+    with open("memory/brain/neuromod.yml") as f:
+        nm = yaml.safe_load(f)
+    c = nm["confianza"]["valor"]
+    u = nm["urgencia"]["valor"]
+    e = nm["exploracion"]["valor"]
+    ca = nm["cautela"]["valor"]
+    print(f"Estado: conf={c} urg={u} exp={e} caut={ca}")
+    print("Instrucciones para esta sesión:")
+    # Confianza
+    if c >= 8: print("  ⚠️ CONFIANZA ALTA: autocrítica extra. Busca activamente dónde puedes estar equivocado.")
+    elif c >= 6: print("  ✅ Autonomía normal. Commits directos, pedir confirmación solo en cambios destructivos.")
+    elif c >= 4: print("  🔶 Confianza media: confirma antes de commits. Usa --dry-run cuando exista.")
+    else: print("  🔴 Confianza baja: NO commitear sin aprobación explícita. Verificar cada paso.")
+    # Urgencia
+    if u >= 8: print("  🔴 MODO CRISIS: respuestas cortas, acción > reflexión, cero tangentes.")
+    elif u >= 6: print("  🔶 Urgencia alta: prioriza deliverables sobre exploración.")
+    elif u <= 3: print("  🟢 Sin presión: exploración y tangentes permitidas.")
+    # Exploración
+    if e >= 7: print("  🔬 Exploración alta: propón ideas no solicitadas, conecta dominios lejanos.")
+    elif e <= 3: print("  🔧 Modo ejecución: haz lo pedido, soluciones probadas, sin innovar por innovar.")
+    # Cautela
+    if ca >= 7: print("  🛡️ Cautela alta: commits pequeños, verificar antes de actuar, backups.")
+    elif ca <= 3: print("  ⚡ Cautela baja: cambios atrevidos permitidos, velocidad sobre seguridad.")
+    # Patrones compuestos
+    if c <= 3 and u >= 7: print("  ⚠️ PATRÓN DEGRADACIÓN: considerar handoff si no mejora en 3 turnos.")
+    if e >= 7 and u >= 7: print("  ⚠️ CONFLICTO: alta exploración + alta urgencia. Urgencia gana. Anota ideas para después.")
+except Exception as ex:
+    print(f"(neuromod parse error: {ex})")
+PYEOF
+
+echo ""
 echo "========== CONSOLIDACIÓN (auto-generado) =========="
 if [ -f memory/brain/priorities.yml ]; then
   echo "--- PRIORIDADES ---"

@@ -156,6 +156,48 @@ with open('$STATE', 'w') as f:
 echo ""
 echo "🫀 Consolidación completada."
 echo "   Episodios: $LAST_COUNT → $TOTAL (+$NEW)"
+
+# === HEAT DECAY ===
+echo ""
+echo "🔥 Aplicando heat decay a episodios no referenciados..."
+python3 << HEATEOF
+import re
+
+episodes_path = "$REPO_ROOT/memory/brain/episodes.md"
+with open(episodes_path, "r") as f:
+    lines = f.readlines()
+
+sessions = re.findall(r'### s(\d+)', ''.join(lines))
+if not sessions:
+    print("  No sessions found, skip")
+    exit(0)
+
+current_s = max(int(s) for s in sessions)
+decay_threshold = 5
+changes = 0
+new_lines = []
+
+for line in lines:
+    m = re.search(r'heat:(\d+)', line)
+    s = re.search(r'\bs(\d+)\b', line) if m else None
+    if m and s:
+        heat = int(m.group(1))
+        ep_s = int(s.group(1))
+        age = current_s - ep_s
+        if age >= decay_threshold and heat > 1:
+            new_heat = heat - 1
+            line = line.replace("heat:%d" % heat, "heat:%d" % new_heat, 1)
+            changes += 1
+    new_lines.append(line)
+
+if changes > 0:
+    with open(episodes_path, "w") as f:
+        f.writelines(new_lines)
+    print("  decay: %d episodios (-1 heat, umbral %d sesiones)" % (changes, decay_threshold))
+else:
+    print("  sin decay necesario")
+HEATEOF
+
 echo ""
 echo "Revisa antes de commit:"
 echo "  - $PRIORITIES"

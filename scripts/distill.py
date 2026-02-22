@@ -30,7 +30,7 @@ USER_PROMPT = """Consolida {n} episodios recientes del SoI.
 ## Episodios nuevos a procesar:
 {episodes}
 
-## Genera EXACTAMENTE 3 bloques YAML separados por estas líneas exactas:
+## Genera EXACTAMENTE 4 bloques YAML separados por estas líneas exactas:
 
 ---PRIORITIES---
 generated: {date}
