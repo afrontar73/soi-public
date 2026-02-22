@@ -1,0 +1,16 @@
+# USER MODEL — Formato estructurado
+# Rellenar en la primera sesión
+
+profile:
+  name: "[NOMBRE]"
+  communication:
+    style: "[directo/detallado/casual]"
+    tolerance_for_fluff: "[0-10]"
+    prefers: "[code-over-explanation / explanation-over-code / balanced]"
+
+patterns:
+  # Añadir cuando se observe en 2+ sesiones
+  # - id: P1
+  #   pattern: "descripción"
+  #   confidence: medium
+  #   sessions: 1

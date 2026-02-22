@@ -1,0 +1,15 @@
+calibracion:
+  valor: 5
+coherencia_memoria:
+  valor: 5
+eficiencia_tokens:
+  valor: 5
+satisfaccion_humano:
+  valor: 5
+carga_alostatica:
+  valor: 3
+ventana_contexto:
+  valor: 10
+instancia_actual: s1
+sesiones_totales: 1
+episodios_totales: 0

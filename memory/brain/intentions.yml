@@ -1,0 +1,5 @@
+# Memoria Prospectiva — intentions.yml
+# Intenciones pendientes que boot DEBE leer y evaluar
+# Tipos de trigger: temporal (sesión N, fecha X), contextual (si pasa Y), permanente (siempre)
+
+intentions: []
